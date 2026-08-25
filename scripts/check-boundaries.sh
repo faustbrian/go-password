@@ -7,7 +7,7 @@ for forbidden in \
 	github.com/faustbrian/go-service \
 	github.com/faustbrian/go-log \
 	github.com/faustbrian/go-telemetry \
-	github.com/faustbrian/go-postgresql
+	github.com/faustbrian/go-postgres
 do
 	if printf '%s\n' "$dependencies" | grep -Eq "^${forbidden}(/|$)"; then
 		printf 'forbidden reverse dependency: %s\n' "$forbidden" >&2
