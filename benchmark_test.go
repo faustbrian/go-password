@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	password "github.com/faustbrian/golib/pkg/password"
+	password "github.com/faustbrian/go-password"
 )
 
 func BenchmarkApprovedArgon2id(b *testing.B) {

@@ -6,10 +6,10 @@ import (
 	"errors"
 	"testing"
 
-	password "github.com/faustbrian/golib/pkg/password"
-	"github.com/faustbrian/golib/pkg/password/argon2id"
-	passwordbcrypt "github.com/faustbrian/golib/pkg/password/bcrypt"
-	"github.com/faustbrian/golib/pkg/password/passwordtest"
+	password "github.com/faustbrian/go-password"
+	"github.com/faustbrian/go-password/argon2id"
+	passwordbcrypt "github.com/faustbrian/go-password/bcrypt"
+	"github.com/faustbrian/go-password/passwordtest"
 )
 
 func TestAlgorithmAdaptersAndPHPFixtures(t *testing.T) {

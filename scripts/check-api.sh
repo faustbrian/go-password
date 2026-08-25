@@ -21,7 +21,7 @@ if [ ! -s "$baseline" ]; then
 	exit 1
 fi
 
-run_apidiff -m -w "$current" github.com/faustbrian/golib/pkg/password
+run_apidiff -m -w "$current" github.com/faustbrian/go-password
 run_apidiff -m -incompatible "$baseline" "$current" >"$report"
 if [ -s "$report" ]; then
 	printf '%s\n' 'incompatible exported API changes:' >&2

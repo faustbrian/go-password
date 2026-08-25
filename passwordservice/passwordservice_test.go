@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	password "github.com/faustbrian/golib/pkg/password"
-	"github.com/faustbrian/golib/pkg/password/passwordservice"
+	password "github.com/faustbrian/go-password"
+	"github.com/faustbrian/go-password/passwordservice"
 )
 
 func TestLifecycleProvidesServiceCompatibleHooks(t *testing.T) {

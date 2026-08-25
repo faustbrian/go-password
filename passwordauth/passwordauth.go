@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
-	password "github.com/faustbrian/golib/pkg/password"
+	password "github.com/faustbrian/go-password"
 )
 
 var (

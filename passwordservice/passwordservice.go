@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	password "github.com/faustbrian/golib/pkg/password"
+	password "github.com/faustbrian/go-password"
 )
 
 // ErrInvalidConfig reports a missing admission controller.

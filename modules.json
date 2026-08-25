@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-password",
+  "go_version": "1.26.6",
+  "modules": [
+    {
+      "directory": ".",
+      "module_path": "github.com/faustbrian/go-password",
+      "go_version": "1.26.6",
+      "packages": [
+        {
+          "module_directory": ".",
+          "directory": ".",
+          "name": "password",
+          "import_path": "github.com/faustbrian/go-password",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "argon2id",
+          "name": "argon2id",
+          "import_path": "github.com/faustbrian/go-password/argon2id",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "bcrypt",
+          "name": "bcrypt",
+          "import_path": "github.com/faustbrian/go-password/bcrypt",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "passwordauth",
+          "name": "passwordauth",
+          "import_path": "github.com/faustbrian/go-password/passwordauth",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "passwordservice",
+          "name": "passwordservice",
+          "import_path": "github.com/faustbrian/go-password/passwordservice",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "passwordtest",
+          "name": "passwordtest",
+          "import_path": "github.com/faustbrian/go-password/passwordtest",
+          "kind": "test support",
+          "production": false,
+          "executable": true,
+          "coverage_required": false,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "scripts",
+          "name": "main",
+          "import_path": "github.com/faustbrian/go-password/scripts",
+          "kind": "tooling",
+          "production": false,
+          "executable": false,
+          "coverage_required": false,
+          "build_required": false,
+          "build_tags": []
+        }
+      ],
+      "purpose": "`password` is a narrowly scoped password hashing, verification, parsing, and login-time upgrade library. It uses maintained Go implementations of Argon2id and bcrypt. It does not own users, repositories, registration, login endpoints, sessions, password reset, MFA, authorization, or reversible secrets.",
+      "lifecycle": "stable",
+      "kind": "public library",
+      "releasable": true,
+      "family": "service-edge",
+      "family_label": "Service Edge",
+      "family_description": "Request-edge policy, identity, access decisions, routing, middleware, and process lifecycle.",
+      "family_order": 2,
+      "version": "v1.0.0",
+      "tag_prefix": "v",
+      "owned_dependencies": [],
+      "reverse_owned_dependencies": [],
+      "external_runtime_dependencies": [
+        "golang.org/x/crypto"
+      ],
+      "required_services": [],
+      "build_tags": [],
+      "test_tags": [],
+      "interoperability_tools": [],
+      "specifications": [],
+      "conformance_corpora": [],
+      "provenance": [],
+      "goal_files": [
+        ".ai/GOAL.md",
+        ".ai/GOAL_HARDEN.md"
+      ],
+      "goal_status": "implementation-evidence-inventoried",
+      "goal_evidence": [
+        {
+          "file": ".ai/GOAL.md",
+          "requirements_sha256": "3718488bf4584ff42b62f9f18e7ce9237199809ac3d173a01afbf2fbc75e4b7d",
+          "implementation_evidence": [
+            "CHANGELOG.md",
+            "README.md",
+            "docs/api.md",
+            "docs/compatibility.md",
+            "docs/performance.md",
+            "docs/threat-model.md"
+          ],
+          "verification_gates": [
+            "format-check",
+            "tidy-check",
+            "safety",
+            "vet",
+            "test",
+            "race",
+            "coverage",
+            "lint",
+            "staticcheck",
+            "vulnerability",
+            "secrets",
+            "licenses",
+            "sbom",
+            "fuzz",
+            "mutation",
+            "nilaway",
+            "docs",
+            "api",
+            "conformance",
+            "interoperability",
+            "benchmark"
+          ],
+          "implementation_status": "implemented-requires-fresh-verification"
+        },
+        {
+          "file": ".ai/GOAL_HARDEN.md",
+          "requirements_sha256": "1f4233ae9e00f4e6c5a4b9245029f41a4448f82bb7f71732b30a3dc401a18ff2",
+          "implementation_evidence": [
+            "CHANGELOG.md",
+            "README.md",
+            "docs/api.md",
+            "docs/compatibility.md",
+            "docs/performance.md",
+            "docs/threat-model.md"
+          ],
+          "verification_gates": [
+            "format-check",
+            "tidy-check",
+            "safety",
+            "vet",
+            "test",
+            "race",
+            "coverage",
+            "lint",
+            "staticcheck",
+            "vulnerability",
+            "secrets",
+            "licenses",
+            "sbom",
+            "fuzz",
+            "mutation",
+            "nilaway",
+            "docs",
+            "api",
+            "conformance",
+            "interoperability",
+            "benchmark"
+          ],
+          "implementation_status": "implemented-requires-fresh-verification"
+        }
+      ],
+      "gates": {
+        "api_compatibility": true,
+        "benchmarks": true,
+        "conformance": false,
+        "coverage": true,
+        "documentation": true,
+        "fuzz": true,
+        "lint": true,
+        "mutation": true,
+        "race": true,
+        "security": true,
+        "tests": true
+      }
+    }
+  ]
+}

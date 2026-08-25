@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	password "github.com/faustbrian/golib/pkg/password"
-	"github.com/faustbrian/golib/pkg/password/passwordauth"
+	password "github.com/faustbrian/go-password"
+	"github.com/faustbrian/go-password/passwordauth"
 )
 
 type exampleLookup struct{ hash string }

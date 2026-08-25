@@ -6,8 +6,8 @@ import (
 	"sync"
 	"testing"
 
-	password "github.com/faustbrian/golib/pkg/password"
-	"github.com/faustbrian/golib/pkg/password/passwordtest"
+	password "github.com/faustbrian/go-password"
+	"github.com/faustbrian/go-password/passwordtest"
 )
 
 func TestSharedPolicyAndAdmissionAreRaceSafe(t *testing.T) {

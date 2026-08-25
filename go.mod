@@ -1,4 +1,4 @@
-module github.com/faustbrian/golib/pkg/password
+module github.com/faustbrian/go-password
 
 go 1.26.6
 

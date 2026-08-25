@@ -1,0 +1,148 @@
+{
+  "schema_version": 3,
+  "reason": "Exact mutation checkpoints retained across history rewrites only when the approved old and replacement package input fingerprints, tool version, and report digest match.",
+  "verifier_migration_review": {
+    "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+    "reason": "Each listed checkpoint was executed with the complete current Gremlins semantic patch set introduced by ac300cf3; the four omitted checkpoints require fresh campaigns.",
+    "reviewed_at": "2026-08-20"
+  },
+  "verifier_migrations": [
+    {
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "9702e53cdc328e73d52002ab8ed37b77b80deab110e6f4c146e89d75c8a15c64",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": ".",
+      "report_sha256": "79afdbf789f3f2128752f160f0c7b3e1c3a5685144821568e684d7b6b0e6cfdc"
+    },
+    {
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "16577ef32f6c5dffe27a9cc111779d22ec508671f04bf1b985c4d61772bba8ec",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "argon2id",
+      "report_sha256": "456a1ac9d847e4e1aa33de3880e5d8332dd664446e6fdf4e7e38ed3f0be59680"
+    },
+    {
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "503d36d9d0dda292a38abd411977489701a51e9eac41437bad913ca93fe65a75",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "bcrypt",
+      "report_sha256": "beff99d2685dd3219e028d844a226e327c0757016068058c4628a3f002414eb0"
+    },
+    {
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "a7be18d90e32e9dbb8e2255a8be05dd4668503adb66a8172ba15d5e9ec58dabf",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "passwordauth",
+      "report_sha256": "313e8890fa717fadc9bd1e014df6f9d55de820b75c4509531bc18139a69464df"
+    },
+    {
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "1302fde0eb28600182eeb6c9d10ff16d4be1eadddf1a2f9cd261d4dcd648abc7",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "passwordservice",
+      "report_sha256": "00676761243e43cd0c3873bc589525142b8756332b01f195e3aaf5affb248862"
+    }
+  ],
+  "entries": [
+    {
+      "execution_revision": "8981d527a6e9d753a38ee33888c50a8a96bdc45f",
+      "gate_input_digest": "53a20447ab8817bde8b27860a8fe67b6eb686b8f04a0b7c922089e63bdb557be",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": ".",
+      "report_sha256": "9e4729063259826477d0936c7afa72fe2bdd0e9716e388199784f4c43c913b15"
+    },
+    {
+      "execution_revision": "8981d527a6e9d753a38ee33888c50a8a96bdc45f",
+      "gate_input_digest": "913343741900eac2568c754acd6ef42229452dbf16dc47f255cf028ba9df97f6",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "argon2id",
+      "report_sha256": "a2faafb44f778badf4621311e226f8aa4193e44b3a46ca026abed79b6306b93e"
+    },
+    {
+      "execution_revision": "8981d527a6e9d753a38ee33888c50a8a96bdc45f",
+      "gate_input_digest": "854e91c67472c392d977d9480ade7dfbeb4d384531a74b5aa10838864b95959e",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "bcrypt",
+      "report_sha256": "50087b30cd2bd3d1e44dd4ca91b69a66891dab63a3e2caf9b2d931a19ceb589f"
+    },
+    {
+      "execution_revision": "8981d527a6e9d753a38ee33888c50a8a96bdc45f",
+      "gate_input_digest": "e7f1a6e6b29c80a0d34fd46686245a3db56625ed1f6fda86d28fc658e6981696",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "passwordauth",
+      "report_sha256": "400ebb69c40ecad5b723a357d72538ac1274c1bec1e1b13f6871dd88606c404f"
+    },
+    {
+      "execution_revision": "8981d527a6e9d753a38ee33888c50a8a96bdc45f",
+      "gate_input_digest": "62a1abd17118317345b596f95f21b98e27755df2c50633ef13dc5e0266877dfc",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "passwordservice",
+      "report_sha256": "193756a4422344d98f8a09b79c3c3c59cca3f608361e02f653d42f3ed7ca8dfe"
+    },
+    {
+      "module": ".",
+      "package": ".",
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "9702e53cdc328e73d52002ab8ed37b77b80deab110e6f4c146e89d75c8a15c64",
+      "replacement_gate_input_digest": "0ed30cfde02a8cb8397e9802400c67da5dadc6985c8910d49cc04cd4d9fb3fc5",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "79afdbf789f3f2128752f160f0c7b3e1c3a5685144821568e684d7b6b0e6cfdc"
+    },
+    {
+      "module": ".",
+      "package": "argon2id",
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "16577ef32f6c5dffe27a9cc111779d22ec508671f04bf1b985c4d61772bba8ec",
+      "replacement_gate_input_digest": "e2c8e13cb6da5550439e1aec9175c3476b7e0a5b590307c372c065c8d959a061",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "456a1ac9d847e4e1aa33de3880e5d8332dd664446e6fdf4e7e38ed3f0be59680"
+    },
+    {
+      "module": ".",
+      "package": "bcrypt",
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "503d36d9d0dda292a38abd411977489701a51e9eac41437bad913ca93fe65a75",
+      "replacement_gate_input_digest": "a496adb36244266a180f1a8faabdd5189a85c0f90d2cd6cccbfb8e7b50c93fd0",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "beff99d2685dd3219e028d844a226e327c0757016068058c4628a3f002414eb0"
+    },
+    {
+      "module": ".",
+      "package": "passwordauth",
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "a7be18d90e32e9dbb8e2255a8be05dd4668503adb66a8172ba15d5e9ec58dabf",
+      "replacement_gate_input_digest": "d252c774639b1c35df55187f94fa13b8b3b2e230a1cbd6bedcd722c67254f9a0",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "313e8890fa717fadc9bd1e014df6f9d55de820b75c4509531bc18139a69464df"
+    },
+    {
+      "module": ".",
+      "package": "passwordservice",
+      "execution_revision": "c09c5268b1facb88317f933913b2e7cf4377948b",
+      "gate_input_digest": "1302fde0eb28600182eeb6c9d10ff16d4be1eadddf1a2f9cd261d4dcd648abc7",
+      "replacement_gate_input_digest": "85e7b3f617b902d51b3931a6e9cb1db11e1a688cc12c404a2447c1fae25892c7",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "00676761243e43cd0c3873bc589525142b8756332b01f195e3aaf5affb248862"
+    }
+  ]
+}

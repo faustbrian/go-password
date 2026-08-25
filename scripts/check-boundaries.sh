@@ -3,11 +3,11 @@ set -eu
 
 dependencies=$(go list -deps ./...)
 for forbidden in \
-	github.com/faustbrian/golib/pkg/authentication \
-	github.com/faustbrian/golib/pkg/service \
-	github.com/faustbrian/golib/pkg/log \
-	github.com/faustbrian/golib/pkg/telemetry \
-	github.com/faustbrian/golib/pkg/postgres
+	github.com/faustbrian/go-authentication \
+	github.com/faustbrian/go-service \
+	github.com/faustbrian/go-log \
+	github.com/faustbrian/go-telemetry \
+	github.com/faustbrian/go-postgresql
 do
 	if printf '%s\n' "$dependencies" | grep -Eq "^${forbidden}(/|$)"; then
 		printf 'forbidden reverse dependency: %s\n' "$forbidden" >&2

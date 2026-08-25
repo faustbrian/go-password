@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Before v1, fixes are applied to the current unreleased line. After v1, the
+Fixes are applied to the latest stable v1 release and `main`. The
 latest major version receives security fixes unless a longer window is stated.
 
 | Version | Supported |

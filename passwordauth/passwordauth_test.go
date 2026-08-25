@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
-	password "github.com/faustbrian/golib/pkg/password"
-	"github.com/faustbrian/golib/pkg/password/passwordauth"
-	"github.com/faustbrian/golib/pkg/password/passwordtest"
+	password "github.com/faustbrian/go-password"
+	"github.com/faustbrian/go-password/passwordauth"
+	"github.com/faustbrian/go-password/passwordtest"
 )
 
 type lookupFunc func(context.Context, string) (passwordauth.Record, bool, error)

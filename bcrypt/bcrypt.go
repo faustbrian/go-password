@@ -1,6 +1,6 @@
 package bcrypt
 
-import password "github.com/faustbrian/golib/pkg/password"
+import password "github.com/faustbrian/go-password"
 
 // New validates cost and limits and constructs a bcrypt-target service. New
 // systems should use Argon2id; bcrypt targets exist for controlled compatibility.

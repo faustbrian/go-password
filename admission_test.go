@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	password "github.com/faustbrian/golib/pkg/password"
+	password "github.com/faustbrian/go-password"
 )
 
 func TestAdmissionBoundsActiveAndQueuedOperations(t *testing.T) {

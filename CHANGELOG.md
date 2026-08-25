@@ -5,6 +5,8 @@ versioning after v1.
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-25
+
 ### Documentation
 
 - Link the package README to the repository-wide Golib documentation portal.
@@ -16,6 +18,7 @@ versioning after v1.
 
 ### Changed
 
+- Publish the module from its standalone `github.com/faustbrian/go-password` identity while preserving its documented API and behavior.
 - Delegate local mutation checks to the canonical exact-100 repository runner
   and remove the superseded package-local Gremlins configuration.
 - Remove an obsolete conversion suppression now that Argon2id parallelism is
