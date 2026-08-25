@@ -5,6 +5,8 @@ versioning after v1.
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-25
+
 ### Changed
 
 - Exclude intentional nested modules from root local-proxy archives so local,
@@ -26,8 +28,6 @@ versioning after v1.
 
 - Correct stale package, standalone, and authoritative-source links in public
   documentation.
-
-## 1.0.0 - 2026-08-25
 
 ### Documentation
 
