@@ -128,7 +128,6 @@ PostgreSQL examples.
 - [Threat model](docs/threat-model.md)
 - [Security and secret handling](docs/secret-handling.md)
 - [Testing and release gates](docs/testing.md)
-- [Release evidence and external gates](docs/release-evidence.md)
 - [Compatibility matrix](docs/compatibility.md)
 - [Vector and fixture provenance](docs/vector-provenance.md)
 - [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)

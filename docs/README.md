@@ -27,7 +27,6 @@
 - [Compatibility](compatibility.md)
 - [FAQ](faq.md)
 - [Laravel Migration](laravel-migration.md)
-- [Release Evidence](release-evidence.md)
 - [Testing](testing.md)
 - [Troubleshooting](troubleshooting.md)
 
