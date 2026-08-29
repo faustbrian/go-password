@@ -128,7 +128,6 @@ PostgreSQL examples.
 - [Threat model](docs/threat-model.md)
 - [Security and secret handling](docs/secret-handling.md)
 - [Testing and release gates](docs/testing.md)
-- [Release evidence and external gates](docs/release-evidence.md)
 - [Compatibility matrix](docs/compatibility.md)
 - [Vector and fixture provenance](docs/vector-provenance.md)
 - [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)
@@ -136,8 +135,3 @@ PostgreSQL examples.
 ## License
 
 MIT
-
-## Ecosystem
-
-Use the [Golib documentation portal](https://github.com/faustbrian/golib/blob/main/docs/index.md)
-to choose companion packages, supported stacks, recipes, and operations guidance.

@@ -11,15 +11,17 @@ shown here.
 - This file is the canonical policy for the complete repository.
 - Package policies MAY add stricter domain rules but MUST NOT weaken this file.
 - `CLAUDE.md` and tool-specific files MUST point here rather than duplicate it.
-- Historical `.ai/GOAL*.md` files are requirements and evidence, not proof of
-  completion. Current executable evidence is REQUIRED.
+- Historical implementation plans belong in repository history or issue
+  tracking, not in the released source tree. Current checks MUST pass.
 
 ## Repository Structure
 
 - The public root module MUST live at the repository root.
 - Intentional optional or test modules MAY live in explicit nested directories.
 - Commands MUST live under `cmd/`; private shared code MUST live under
-  `internal/`; root automation MUST live under `scripts/`.
+  `internal/`; repository-wide automation MUST live under `scripts/`.
+  Source-owned verification programs and package-specific gate adapters MAY
+  live under `verification/`.
 - Public module paths MUST match their repository-relative directories beneath
   the module path declared by the root `go.mod`.
 - Every module MUST be declared in `modules.json`, and every package MUST be
@@ -177,7 +179,11 @@ shown here.
 - Comments MUST explain why a constraint or non-obvious implementation exists;
   they MUST NOT narrate obvious syntax.
 - Every public module MUST provide a quick start, API reference, examples,
-  adoption guidance, tradeoffs, security notes, FAQ, and release notes.
+  guidance on when to use it, explicit limitations, security notes, FAQ, and
+  release notes.
+- The root README MUST remain a concise entry point. Detailed guides,
+  operations, audits, and maintainer material belong under `docs/` and MUST be
+  linked through `docs/README.md`.
 - Documentation and examples MUST compile and be checked in CI.
 
 ## Changelogs
