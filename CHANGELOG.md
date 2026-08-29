@@ -5,6 +5,13 @@ versioning after v1.
 
 ## Unreleased
 
+### Changed
+
+- Replace copied repository verification tooling with the released
+  `go-library-tools` v1.0.5 contract while retaining password-specific
+  interoperability, resource-admission, portability, timing, and benchmark
+  verification.
+
 ### Documentation
 
 - Replace archived monorepo links and completed execution artifacts with a

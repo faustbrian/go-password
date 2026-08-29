@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-password",
+  "module": ".",
+  "package": "bcrypt",
+  "gate": "mutation",
+  "input_digest": "sha256:b5cb1b29a84e7a6ba965eb2cec9a840719a5a9ea24420c6debd4379629c8bee1",
+  "verifier_digest": "sha256:9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+  "result": "passed",
+  "report_digest": "sha256:811e4ba31620b698952efb6ff0358ef0710b8e50916df8e8c2232a7470ef364a",
+  "environment": {
+    "CGO_ENABLED": "1",
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.27.0",
+    "gremlins_binary_sha256": "sha256:6a2beddc477eb410f8a670b6c9049558563d3c4327498fe31604d31c773a959e"
+  },
+  "completed_at": "2026-08-29T06:20:38.791583Z"
+}
