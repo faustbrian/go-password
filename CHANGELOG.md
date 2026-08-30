@@ -5,6 +5,9 @@ versioning after v1.
 
 ## Unreleased
 
+The [specification decision register](docs/specification-decisions.md) records
+the current standards and compatibility policy.
+
 ### Changed
 
 - Replace copied repository tooling with the checksum-pinned
@@ -12,6 +15,17 @@ versioning after v1.
   verification evidence.
 
 ### Documentation
+
+- Make RFC 9106 Argon2id, RFC 4648 base64, OpenBSD bcrypt, parser,
+  verification, interoperability, and monotonic-upgrade decisions explicit
+  and release-gated:
+  PASSWORD-DEC-001 sha256:ba44cc58be46506940728e9d6edfcfc165f84c201ac01efe709b4949a211cd92;
+  PASSWORD-DEC-002 sha256:9d92027d805ca587dcce9875bb0af09d2d9913ad883bee56e173407d7a6b6362;
+  PASSWORD-DEC-003 sha256:ea20f1c77cbbb8f8b5ca43a23c217ae77e142eed42ee4db1f636be1fc949ab45;
+  PASSWORD-DEC-004 sha256:3526e9549c855d048fec5c31220d1c3085331eef128437c1d3bc1a1e682daf9d;
+  PASSWORD-DEC-005 sha256:695d1894768e03f3a3d5994e432d9eac0248b981bc3493c0931ce9ba19996d84;
+  PASSWORD-DEC-006 sha256:d020717a693732de00655a0a0c4359626feacc6f71d130acbd21800e3979a748;
+  PASSWORD-DEC-007 sha256:e3dcdee13b077e6effd51a4b6dd9d00c0b3a373826aaa0ee305495e4088a5def.
 
 - Replace archived monorepo links and completed execution artifacts with a
   standalone, human-oriented documentation structure.

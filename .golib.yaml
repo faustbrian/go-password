@@ -24,6 +24,13 @@ api:
 
 operations:
   - module: .
+    gate: conformance
+    steps:
+      - type: make
+        makefile: verification/package.mk
+        target: conformance
+        timeout: 20m
+  - module: .
     gate: docs
     steps:
       - type: make
@@ -43,11 +50,14 @@ operations:
         timeout: 20m
       - type: make
         makefile: verification/package.mk
-        target: interoperability
+        target: resource
         timeout: 20m
+  - module: .
+    gate: interoperability
+    steps:
       - type: make
         makefile: verification/package.mk
-        target: resource
+        target: interoperability
         timeout: 20m
   - module: .
     gate: fuzz

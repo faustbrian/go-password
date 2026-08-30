@@ -1,10 +1,13 @@
-.PHONY: benchmark boundaries docs interoperability kubernetes-benchmark portability resource
+.PHONY: benchmark boundaries conformance docs interoperability kubernetes-benchmark portability resource
 
 benchmark:
 	./scripts/check-benchmarks.sh
 
 boundaries:
 	./scripts/check-boundaries.sh
+
+conformance:
+	./scripts/check-conformance.sh
 
 docs:
 	./scripts/check-docs.sh
