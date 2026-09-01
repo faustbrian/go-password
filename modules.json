@@ -100,18 +100,28 @@
       "build_tags": [],
       "test_tags": [],
       "interoperability_tools": [
-        "php"
+        "PHP 8.5 password_hash and password_verify"
       ],
-      "specifications": [],
-      "conformance_corpora": [],
-      "provenance": [],
+      "specifications": [
+        "RFC 9106 Argon2",
+        "RFC 4648 Base-N Encodings",
+        "OpenBSD 7.8 bcrypt password hashing"
+      ],
+      "conformance_corpora": [
+        "Argon2 reference implementation encoded-hash vector",
+        "golang.org/x/crypto bcrypt vector",
+        "PHP 8.5 Argon2id and bcrypt bidirectional interoperability corpus"
+      ],
+      "provenance": [
+        "specification/manifest.tsv"
+      ],
       "goal_files": [],
       "goal_status": "not-applicable",
       "goal_evidence": [],
       "gates": {
         "api_compatibility": true,
         "benchmarks": true,
-        "conformance": false,
+        "conformance": true,
         "coverage": true,
         "documentation": true,
         "fuzz": true,

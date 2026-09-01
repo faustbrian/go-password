@@ -129,6 +129,7 @@ PostgreSQL examples.
 - [Security and secret handling](docs/secret-handling.md)
 - [Testing and release gates](docs/testing.md)
 - [Compatibility matrix](docs/compatibility.md)
+- [Specification decisions](docs/specification-decisions.md)
 - [Vector and fixture provenance](docs/vector-provenance.md)
 - [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)
 

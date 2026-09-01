@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-30",
+  "review_interval_days": 90,
+  "authorities": [
+    {
+      "id": "rfc9106-source",
+      "kind": "specification",
+      "version": "RFC 9106 (September 2021)",
+      "url": "https://www.rfc-editor.org/rfc/rfc9106.txt",
+      "sha256": "855c06f060379e34285e83a217e9069b5c72e161a1e54df9af5cd88dbb231f31",
+      "specifications": ["RFC 9106 Argon2"]
+    },
+    {
+      "id": "rfc9106-errata",
+      "kind": "errata",
+      "version": "",
+      "url": "https://errata.rfc-editor.org/rfc9106",
+      "sha256": "b50c7bd940807493d10f4e05e98574fb37d256c57a9234c7e06ca3a40dcdca86",
+      "specifications": ["RFC 9106 Argon2"]
+    },
+    {
+      "id": "rfc4648-source",
+      "kind": "specification",
+      "version": "RFC 4648",
+      "url": "https://www.rfc-editor.org/rfc/rfc4648.txt",
+      "sha256": "84e14418f795d503be5f34bf23ce4ebaa119e9ec7c9f667d8caeb111385b178f",
+      "specifications": ["RFC 4648 Base-N Encodings"]
+    },
+    {
+      "id": "rfc4648-errata",
+      "kind": "errata",
+      "version": "",
+      "url": "https://errata.rfc-editor.org/rfc4648",
+      "sha256": "33f5de29774d66f56e251f2acf5e53e1e09dfb54f7728cf56fff1db695f86925",
+      "specifications": ["RFC 4648 Base-N Encodings"]
+    },
+    {
+      "id": "openbsd-bcrypt-source",
+      "kind": "specification",
+      "version": "OpenBSD 7.8 bcrypt(3)",
+      "url": "https://man.openbsd.org/OpenBSD-7.8/bcrypt.3",
+      "sha256": "99ccdea28823772d74dc51610a711f7c00552fe3df89c792e20d2e4d3a367b5f",
+      "specifications": ["OpenBSD 7.8 bcrypt password hashing"]
+    },
+    {
+      "id": "openbsd-78-errata",
+      "kind": "errata",
+      "version": "",
+      "url": "https://www.openbsd.org/errata78.html",
+      "sha256": "d61cf8abfe3d45592871f0929df366c6cbadf60ca746682b8141527242966672",
+      "specifications": ["OpenBSD 7.8 bcrypt password hashing"]
+    }
+  ]
+}

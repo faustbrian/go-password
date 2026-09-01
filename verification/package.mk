@@ -1,10 +1,13 @@
-.PHONY: api-docs boundaries interoperability kubernetes-bench portability resource
+.PHONY: api-docs boundaries conformance interoperability kubernetes-bench portability resource
 
 api-docs:
 	go run ./verification/check-api-docs.go
 
 boundaries:
 	./verification/check-boundaries.sh
+
+conformance:
+	./verification/check-conformance.sh
 
 interoperability:
 	./verification/check-interoperability.sh

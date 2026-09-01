@@ -5,14 +5,27 @@ versioning after v1.
 
 ## Unreleased
 
+The [specification decision register](docs/specification-decisions.md) records
+the current standards and compatibility policy.
+
 ### Changed
 
-- Replace copied repository verification tooling with the released
-  `go-library-tools` v1.0.5 contract while retaining password-specific
-  interoperability, resource-admission, portability, timing, and benchmark
-  verification.
+- Adopt the checksum-pinned `go-library-tools` v1.2.0 contract and immutable
+  `1f9629e5f27418600460b55a50a5b2fc81697fab` workflow while retaining
+  package-owned policy and verification evidence.
 
 ### Documentation
+
+- Make RFC 9106 Argon2id, RFC 4648 base64, OpenBSD bcrypt, parser,
+  verification, interoperability, and monotonic-upgrade decisions explicit
+  and release-gated:
+  PASSWORD-DEC-001 sha256:81d693f05f84c603efdb629d9249e13e134def4e645afffd12e50b1e7233823c;
+  PASSWORD-DEC-002 sha256:d0aff45bb407811912bc21be738605732adbd604decc339b449bd25fdf125ddf;
+  PASSWORD-DEC-003 sha256:abb7d2b09fe08461078fbebe88637d317ef52b5ffc035fa3072950717978f24f;
+  PASSWORD-DEC-004 sha256:35d8b75df3f64f7a8d45e38c763ebc7e110953b0542d3c03cd230c2d1194e83e;
+  PASSWORD-DEC-005 sha256:ed3cb3293b84a79a7cd06892599874eaf56b4f91071e8537df71fc93794a7104;
+  PASSWORD-DEC-006 sha256:d020717a693732de00655a0a0c4359626feacc6f71d130acbd21800e3979a748;
+  PASSWORD-DEC-007 sha256:e3dcdee13b077e6effd51a4b6dd9d00c0b3a373826aaa0ee305495e4088a5def.
 
 - Replace archived monorepo links and completed execution artifacts with a
   standalone, human-oriented documentation structure.

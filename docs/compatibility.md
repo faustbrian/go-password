@@ -1,5 +1,8 @@
 # Compatibility matrix
 
+Observable standards and profile choices are recorded in the
+[specification decision register](specification-decisions.md).
+
 | Producer/encoding | Verify | Hash target | Upgrade behavior |
 | --- | --- | --- | --- |
 | Go Argon2id PHC v19 | Yes | Yes | Monotonic parameter upgrade |

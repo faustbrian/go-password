@@ -7,13 +7,13 @@
   "input_digest": "sha256:bb9fc2d5dd49e9b699f9fb0b31be6b680de79605bfe8d109b0e8d9036e5baeb2",
   "verifier_digest": "sha256:9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
   "result": "passed",
-  "report_digest": "sha256:92b4fee4030798ee19d4ad41b059524efe6028f4310dd95afe81286b6f8c9d63",
+  "report_digest": "sha256:38054cee67eacba8234fb40a41d08fe635fe485be164e40c0606d84a53951ad3",
   "environment": {
     "CGO_ENABLED": "1",
     "GOARCH": "arm64",
     "GOOS": "darwin",
-    "GOVERSION": "go1.27.0",
-    "gremlins_binary_sha256": "sha256:6a2beddc477eb410f8a670b6c9049558563d3c4327498fe31604d31c773a959e"
+    "GOVERSION": "go1.26.6",
+    "gremlins_binary_sha256": "sha256:e05bf25d661b16ab96d6f2e17aed481d393930e0f24205cc341b010f887368a0"
   },
-  "completed_at": "2026-08-29T06:20:16.877171Z"
+  "completed_at": "2026-08-30T01:50:36.073394Z"
 }

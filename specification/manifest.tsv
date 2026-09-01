@@ -1,0 +1,4 @@
+id	version	role	status	sha256	bytes	url
+rfc9106	RFC-9106	argon2-function-and-vectors	pinned	855c06f060379e34285e83a217e9069b5c72e161a1e54df9af5cd88dbb231f31	37228	https://www.rfc-editor.org/rfc/rfc9106.txt
+rfc4648	RFC-4648	base64-encoding	pinned	84e14418f795d503be5f34bf23ce4ebaa119e9ec7c9f667d8caeb111385b178f	35491	https://www.rfc-editor.org/rfc/rfc4648.txt
+openbsd-bcrypt-7.8	OpenBSD-7.8	bcrypt-format-and-behavior	pinned	99ccdea28823772d74dc51610a711f7c00552fe3df89c792e20d2e4d3a367b5f	11404	https://man.openbsd.org/OpenBSD-7.8/bcrypt.3

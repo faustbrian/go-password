@@ -1,5 +1,3 @@
-SHELL := /usr/bin/env bash
-
 GOLIB ?= golib
 
 .PHONY: check ci inventory repository-check
