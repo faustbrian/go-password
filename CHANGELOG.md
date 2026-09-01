@@ -10,20 +10,20 @@ the current standards and compatibility policy.
 
 ### Changed
 
-- Replace copied repository tooling with the checksum-pinned
-  `go-library-tools` v1.0.13 contract while retaining package-owned policy and
-  verification evidence.
+- Adopt the checksum-pinned `go-library-tools` v1.2.0 contract and immutable
+  `1f9629e5f27418600460b55a50a5b2fc81697fab` workflow while retaining
+  package-owned policy and verification evidence.
 
 ### Documentation
 
 - Make RFC 9106 Argon2id, RFC 4648 base64, OpenBSD bcrypt, parser,
   verification, interoperability, and monotonic-upgrade decisions explicit
   and release-gated:
-  PASSWORD-DEC-001 sha256:ba44cc58be46506940728e9d6edfcfc165f84c201ac01efe709b4949a211cd92;
-  PASSWORD-DEC-002 sha256:9d92027d805ca587dcce9875bb0af09d2d9913ad883bee56e173407d7a6b6362;
-  PASSWORD-DEC-003 sha256:ea20f1c77cbbb8f8b5ca43a23c217ae77e142eed42ee4db1f636be1fc949ab45;
-  PASSWORD-DEC-004 sha256:3526e9549c855d048fec5c31220d1c3085331eef128437c1d3bc1a1e682daf9d;
-  PASSWORD-DEC-005 sha256:695d1894768e03f3a3d5994e432d9eac0248b981bc3493c0931ce9ba19996d84;
+  PASSWORD-DEC-001 sha256:81d693f05f84c603efdb629d9249e13e134def4e645afffd12e50b1e7233823c;
+  PASSWORD-DEC-002 sha256:d0aff45bb407811912bc21be738605732adbd604decc339b449bd25fdf125ddf;
+  PASSWORD-DEC-003 sha256:abb7d2b09fe08461078fbebe88637d317ef52b5ffc035fa3072950717978f24f;
+  PASSWORD-DEC-004 sha256:35d8b75df3f64f7a8d45e38c763ebc7e110953b0542d3c03cd230c2d1194e83e;
+  PASSWORD-DEC-005 sha256:ed3cb3293b84a79a7cd06892599874eaf56b4f91071e8537df71fc93794a7104;
   PASSWORD-DEC-006 sha256:d020717a693732de00655a0a0c4359626feacc6f71d130acbd21800e3979a748;
   PASSWORD-DEC-007 sha256:e3dcdee13b077e6effd51a4b6dd9d00c0b3a373826aaa0ee305495e4088a5def.
 

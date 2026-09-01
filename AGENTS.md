@@ -19,7 +19,9 @@ shown here.
 - The public root module MUST live at the repository root.
 - Intentional optional or test modules MAY live in explicit nested directories.
 - Commands MUST live under `cmd/`; private shared code MUST live under
-  `internal/`; root automation MUST live under `scripts/`.
+  `internal/`; repository-wide automation MUST live under `scripts/`.
+  Source-owned verification programs and package-specific gate adapters MAY
+  live under `verification/`.
 - Public module paths MUST match their repository-relative directories beneath
   the module path declared by the root `go.mod`.
 - Every module MUST be declared in `modules.json`, and every package MUST be

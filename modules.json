@@ -79,18 +79,6 @@
           "coverage_required": false,
           "build_required": true,
           "build_tags": []
-        },
-        {
-          "module_directory": ".",
-          "directory": "scripts",
-          "name": "main",
-          "import_path": "github.com/faustbrian/go-password/scripts",
-          "kind": "tooling",
-          "production": false,
-          "executable": false,
-          "coverage_required": false,
-          "build_required": false,
-          "build_tags": []
         }
       ],
       "purpose": "`password` is a narrowly scoped password hashing, verification, parsing, and login-time upgrade library. It uses maintained Go implementations of Argon2id and bcrypt. It does not own users, repositories, registration, login endpoints, sessions, password reset, MFA, authorization, or reversible secrets.",

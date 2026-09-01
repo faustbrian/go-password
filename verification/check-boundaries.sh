@@ -15,12 +15,15 @@ do
 	fi
 done
 
-if rg -n '(^|[[:space:]])"unsafe"|import "C"' --glob '*.go' --glob '!*_test.go' .; then
+unsafe_imports=$(find . -type f -name '*.go' -not -name '*_test.go' \
+	-not -path './.git/*' -exec grep -nE '(^|[[:space:]])"unsafe"|import "C"' {} + || true)
+if [ -n "$unsafe_imports" ]; then
 	printf '%s\n' 'unsafe or cgo is forbidden' >&2
+	printf '%s\n' "$unsafe_imports" >&2
 	exit 1
 fi
 
-if rg --files --glob '*.s' --glob '!.git/**' | grep -q .; then
+if find . -type f -name '*.s' -not -path './.git/*' -print -quit | grep -q .; then
 	printf '%s\n' 'custom assembly is forbidden' >&2
 	exit 1
 fi

@@ -37,9 +37,9 @@ echo password_hash($password, PASSWORD_ARGON2ID, [
 ]), PHP_EOL;
 echo password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]), PHP_EOL;
 ' >"$php_output"
-go run ./scripts/verify-interoperability.go "$php_output"
+go run ./verification/verify-interoperability.go "$php_output"
 
-go run ./scripts/generate-interoperability.go >"$go_output"
+go run ./verification/generate-interoperability.go >"$go_output"
 argon=$(sed -n '1p' "$go_output")
 bcrypt=$(sed -n '2p' "$go_output")
 # shellcheck disable=SC2016 # PHP variables must not expand in the shell.

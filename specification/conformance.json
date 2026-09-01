@@ -9,7 +9,7 @@
       "fuzz": ["FuzzParseEncodedHash", "FuzzBoundedVerify"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": ["scripts/check-interoperability.sh"],
+      "differential_evidence": ["verification/check-interoperability.sh"],
       "differential_classification": "maintained peer agreement",
       "public_behavior": ["Only Argon2id version 1.3 represented as version 19 is hashed or verified."]
     },
@@ -21,7 +21,7 @@
       "fuzz": ["FuzzBoundedVerify"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": ["scripts/check-interoperability.sh"],
+      "differential_evidence": ["verification/check-interoperability.sh"],
       "differential_classification": "maintained peer agreement",
       "public_behavior": ["Default Argon2id uses 64 MiB, time 2, one lane, a 16-byte salt, and a 32-byte output under explicit resource limits."]
     },
@@ -33,7 +33,7 @@
       "fuzz": ["FuzzParseEncodedHash"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": ["scripts/check-interoperability.sh"],
+      "differential_evidence": ["verification/check-interoperability.sh"],
       "differential_classification": "maintained peer agreement",
       "public_behavior": ["Argon2id salt and output fields use strict canonical unpadded RFC 4648 standard base64."]
     },
@@ -45,7 +45,7 @@
       "fuzz": ["FuzzParseEncodedHash", "FuzzBoundedVerify"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": ["scripts/check-interoperability.sh"],
+      "differential_evidence": ["verification/check-interoperability.sh"],
       "differential_classification": "maintained peer agreement",
       "public_behavior": ["Argon2id persistence strings use one fixed field order, decimal spelling, version, length policy, and error classification."]
     },
@@ -57,7 +57,7 @@
       "fuzz": ["FuzzParseEncodedHash", "FuzzBoundedVerify"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": ["scripts/check-interoperability.sh"],
+      "differential_evidence": ["verification/check-interoperability.sh"],
       "differential_classification": "maintained peer agreement",
       "public_behavior": ["Bcrypt accepts strict canonical $2a$, $2b$, and $2y$ hashes, bounded cost, and passwords no longer than 72 bytes."]
     },

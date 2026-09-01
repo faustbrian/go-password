@@ -26,4 +26,4 @@ GOWORK=off go test ./ -run \
 GOWORK=off go test ./passwordauth -run \
 	'^(TestAuthenticateReturnsExplicitCASUpgrade|TestConcurrentUpgradeCrashAndCASStatesPreserveUsableHash)$' \
 	-count=1
-./scripts/check-interoperability.sh
+./verification/check-interoperability.sh

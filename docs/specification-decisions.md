@@ -44,7 +44,7 @@ changelog, conformance, and peer-evidence review.
 | Official or pinned fixtures | vectors_test.go |
 | Fuzz evidence | FuzzParseEncodedHash<br>FuzzBoundedVerify |
 | Interoperability evidence | None. |
-| Differential evidence | scripts/check-interoperability.sh |
+| Differential evidence | verification/check-interoperability.sh |
 | Affected public APIs | Algorithm<br>Argon2idParameters<br>ParseEncodedHash<br>Service.Hash<br>Service.Verify |
 | Affected documentation | docs/specification-decisions.md<br>docs/parser-grammar.md<br>docs/algorithm-selection.md |
 | Upstream status | RFC 9106 and its errata are monitored; no current erratum changes the selected Argon2id version. |
@@ -77,7 +77,7 @@ changelog, conformance, and peer-evidence review.
 | Official or pinned fixtures | passwordtest/passwordtest.go |
 | Fuzz evidence | FuzzBoundedVerify |
 | Interoperability evidence | None. |
-| Differential evidence | scripts/check-interoperability.sh |
+| Differential evidence | verification/check-interoperability.sh |
 | Affected public APIs | DefaultPolicy<br>NewPolicy<br>Argon2idParameters<br>Limits<br>Service.Hash<br>Service.Verify |
 | Affected documentation | docs/specification-decisions.md<br>README.md<br>docs/kubernetes-sizing.md |
 | Upstream status | RFC 9106 parameter recommendations are unchanged; this package profile is an explicit deployment policy, not a claim to use either generic profile verbatim. |
@@ -110,7 +110,7 @@ changelog, conformance, and peer-evidence review.
 | Official or pinned fixtures | vectors_test.go<br>passwordtest/passwordtest.go |
 | Fuzz evidence | FuzzParseEncodedHash |
 | Interoperability evidence | None. |
-| Differential evidence | scripts/check-interoperability.sh |
+| Differential evidence | verification/check-interoperability.sh |
 | Affected public APIs | EncodedHash.String<br>ParseEncodedHash<br>Service.Hash<br>Service.Verify |
 | Affected documentation | docs/specification-decisions.md<br>docs/parser-grammar.md<br>docs/laravel-migration.md |
 | Upstream status | RFC 4648 errata are monitored; unpadded PHC usage remains a package profile decision. |
@@ -143,7 +143,7 @@ changelog, conformance, and peer-evidence review.
 | Official or pinned fixtures | passwordtest/passwordtest.go |
 | Fuzz evidence | FuzzParseEncodedHash<br>FuzzBoundedVerify |
 | Interoperability evidence | None. |
-| Differential evidence | scripts/check-interoperability.sh |
+| Differential evidence | verification/check-interoperability.sh |
 | Affected public APIs | ParseEncodedHash<br>EncodedHash<br>Limits<br>Service.Verify |
 | Affected documentation | docs/specification-decisions.md<br>docs/parser-grammar.md<br>docs/api.md |
 | Upstream status | No RFC 9106 erratum currently defines the missing persistence grammar; the deployed profile remains package-owned. |
@@ -176,7 +176,7 @@ changelog, conformance, and peer-evidence review.
 | Official or pinned fixtures | vectors_test.go<br>passwordtest/passwordtest.go |
 | Fuzz evidence | FuzzParseEncodedHash<br>FuzzBoundedVerify |
 | Interoperability evidence | None. |
-| Differential evidence | scripts/check-interoperability.sh |
+| Differential evidence | verification/check-interoperability.sh |
 | Affected public APIs | Bcrypt<br>ParseEncodedHash<br>EncodedHash.BcryptCost<br>Service.Hash<br>Service.Verify |
 | Affected documentation | docs/specification-decisions.md<br>docs/parser-grammar.md<br>docs/compatibility.md |
 | Upstream status | OpenBSD 7.8 errata and maintained Go and PHP behavior are monitored separately; no RFC is claimed for bcrypt. |

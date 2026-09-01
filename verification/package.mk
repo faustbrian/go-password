@@ -1,25 +1,22 @@
-.PHONY: benchmark boundaries conformance docs interoperability kubernetes-benchmark portability resource
+.PHONY: api-docs boundaries conformance interoperability kubernetes-bench portability resource
 
-benchmark:
-	./scripts/check-benchmarks.sh
+api-docs:
+	go run ./verification/check-api-docs.go
 
 boundaries:
-	./scripts/check-boundaries.sh
+	./verification/check-boundaries.sh
 
 conformance:
-	./scripts/check-conformance.sh
-
-docs:
-	./scripts/check-docs.sh
+	./verification/check-conformance.sh
 
 interoperability:
-	./scripts/check-interoperability.sh
+	./verification/check-interoperability.sh
 
-kubernetes-benchmark:
-	./scripts/check-kubernetes-benchmarks.sh
+kubernetes-bench:
+	./verification/check-kubernetes-benchmarks.sh
 
 portability:
-	./scripts/check-portability.sh
+	./verification/check-portability.sh
 
 resource:
 	go test -race -tags=resource -run '^TestDefaultPolicyResourceAdmissionStress$$' ./

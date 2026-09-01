@@ -73,18 +73,6 @@
       "coverage_required": false,
       "build_required": true,
       "build_tags": []
-    },
-    {
-      "module_directory": ".",
-      "directory": "scripts",
-      "name": "main",
-      "import_path": "github.com/faustbrian/go-password/scripts",
-      "kind": "tooling",
-      "production": false,
-      "executable": false,
-      "coverage_required": false,
-      "build_required": false,
-      "build_tags": []
     }
   ]
 }
