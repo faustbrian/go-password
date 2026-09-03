@@ -10,11 +10,20 @@ the current standards and compatibility policy.
 
 ### Changed
 
+- Publish schema-v2 cohesion metadata for the password module, algorithm
+  packages, authentication and service integrations, and test support.
+- Adopt the checksum-verified `go-library-tools` v1.3.0 CLI, expose the local
+  `make cohesion` gate, and pin reusable-workflow cohesion enforcement to its
+  final immutable revision.
+
 - Adopt the checksum-pinned `go-library-tools` v1.2.0 contract and immutable
   `1f9629e5f27418600460b55a50a5b2fc81697fab` workflow while retaining
   package-owned policy and verification evidence.
 
 ### Documentation
+
+- Link consumers to the immutable v1.3.0 Golib ecosystem index and Service edge
+  package-family guidance.
 
 - Make RFC 9106 Argon2id, RFC 4648 base64, OpenBSD bcrypt, parser,
   verification, interoperability, and monotonic-upgrade decisions explicit
