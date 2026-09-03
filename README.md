@@ -133,6 +133,10 @@ PostgreSQL examples.
 - [Vector and fixture provenance](docs/vector-provenance.md)
 - [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)
 
+For ecosystem-wide package selection, construction, ownership, and lifecycle
+guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/README.md)
+and its [Service edge family](https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/design-language.md#package-families-and-selection).
+
 ## License
 
 MIT
