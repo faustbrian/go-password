@@ -10,6 +10,10 @@ the current standards and compatibility policy.
 
 ### Changed
 
+- Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable W14
+  reusable workflow, and enforce online specification monitoring from local
+  `make ci`, without changing the public API or runtime behavior.
+
 - Publish schema-v2 cohesion metadata for the password module, algorithm
   packages, authentication and service integrations, and test support.
 - Adopt the checksum-verified `go-library-tools` v1.3.0 CLI, expose the local
@@ -21,6 +25,10 @@ the current standards and compatibility policy.
   package-owned policy and verification evidence.
 
 ### Documentation
+
+- Link ecosystem and Service edge family guidance to the immutable v1.4.0
+  documentation release, and include the specification decision register in
+  the documentation index.
 
 - Link consumers to the immutable v1.3.0 Golib ecosystem index and Service edge
   package-family guidance.
