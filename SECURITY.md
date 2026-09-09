@@ -2,19 +2,25 @@
 
 ## Supported versions
 
-Fixes are applied to the latest stable v1 release and `main`. The
-latest major version receives security fixes unless a longer window is stated.
+The latest stable v1 release receives security fixes. Older releases and the
+`main` branch are unsupported; upgrade before reporting unless the issue is a
+regression under active development.
 
 | Version | Supported |
 | --- | --- |
-| Unreleased | Yes |
+| Latest stable v1 release | Yes |
+| Older releases | No |
+| `main` | No |
 
 ## Reporting a vulnerability
 
-Do not open a public issue. Use private vulnerability reporting for the
-repository. Include the affected version, synthetic reproduction, realistic
-impact, suspected password/hash exposure, and embargo constraints. Do not send
-real credentials or production hashes.
+Do not disclose a suspected vulnerability in a public issue. Open a
+[detail-free support issue](https://github.com/faustbrian/go-password/issues/new)
+asking a maintainer for a private contact channel.
+
+Include the affected version, a synthetic reproduction, realistic impact,
+suspected password/hash exposure, and embargo constraints. Do not send real
+credentials or production hashes.
 
 ## Security boundary
 

@@ -28,6 +28,8 @@
 - [FAQ](faq.md)
 - [Laravel Migration](laravel-migration.md)
 - [Specification Decisions](specification-decisions.md)
+- [Support](../SUPPORT.md)
+- [Security Policy](../SECURITY.md)
 - [Testing](testing.md)
 - [Troubleshooting](troubleshooting.md)
 
