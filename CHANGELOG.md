@@ -21,6 +21,9 @@ the current standards and compatibility policy.
 
 ### Changed
 
+- Adopt the corrected public `go-library-tools` v1.6.1 workflow and validate
+  cohesion metadata with its proportional-assurance contract.
+
 - Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable W14
   reusable workflow, and enforce online specification monitoring from local
   `make ci`, without changing the public API or runtime behavior.
