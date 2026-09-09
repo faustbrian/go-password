@@ -26,6 +26,9 @@ the current standards and compatibility policy.
 
 ### Documentation
 
+- Document the stable v1 support window, version-pinned installation, support
+  route, and vulnerability-reporting guidance.
+
 - Link ecosystem and Service edge family guidance to the immutable v1.4.0
   documentation release, and include the specification decision register in
   the documentation index.

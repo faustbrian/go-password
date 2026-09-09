@@ -15,6 +15,8 @@ and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
 endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 
+The module is a stable v1 public library. It requires Go 1.26.6 or newer.
+
 ## Requirements
 
 - Go 1.26.6 or newer.
@@ -23,7 +25,7 @@ endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 ## Install
 
 ```sh
-go get github.com/faustbrian/go-password
+go get github.com/faustbrian/go-password@v1
 ```
 
 ## Five-minute Argon2id quickstart
@@ -132,6 +134,7 @@ PostgreSQL examples.
 - [Specification decisions](docs/specification-decisions.md)
 - [Vector and fixture provenance](docs/vector-provenance.md)
 - [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md)
+- [Support](SUPPORT.md) and [security policy](SECURITY.md)
 
 For ecosystem-wide package selection, construction, ownership, and lifecycle
 guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
