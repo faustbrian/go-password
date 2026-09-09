@@ -5,6 +5,8 @@ versioning after v1.
 
 ## Unreleased
 
+## 1.1.0 - 2026-09-09
+
 The [specification decision register](docs/specification-decisions.md) records
 the current standards and compatibility policy.
 
