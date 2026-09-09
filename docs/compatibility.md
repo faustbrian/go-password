@@ -22,3 +22,12 @@ Producer commands and source provenance are recorded in
 
 No format extension is inferred. New algorithms require an explicit adapter,
 grammar, bounds, vectors, fuzzing, migration policy, and compatibility entry.
+
+## Adapter import paths
+
+New code should use `adapters/authentication` and `adapters/service`. The
+released `passwordauth` and `passwordservice` paths remain deprecated
+delegating facades with their original exported types, reflected package
+identities, error strings, and behavior. Migrating an import does not change
+password formats, persistence ownership, lifecycle ordering, or error
+classification.

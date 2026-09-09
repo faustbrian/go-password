@@ -40,8 +40,9 @@ Fixtures live in `passwordtest`; they contain no production credentials.
 6. Authenticate after a successful match even if the optional CAS loses to a
    concurrent login. Re-read later if the application needs confirmation.
 
-`passwordauth.Authenticator` packages the subject and expected/replacement CAS
-pair while leaving lookup and persistence with the application.
+`passwordauthentication.Authenticator` from `adapters/authentication` packages
+the subject and expected/replacement CAS pair while leaving lookup and
+persistence with the application.
 
 ## Failure and crash safety
 

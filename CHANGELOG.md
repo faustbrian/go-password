@@ -8,7 +8,21 @@ versioning after v1.
 The [specification decision register](docs/specification-decisions.md) records
 the current standards and compatibility policy.
 
+### Added
+
+- Add target-oriented `adapters/authentication` and `adapters/service`
+  packages as the implementation-owning integration paths.
+
+### Deprecated
+
+- Deprecate `passwordauth` and `passwordservice` in favor of their
+  target-oriented successors while preserving their released API, behavior,
+  errors, and reflected type identities through delegating facades.
+
 ### Changed
+
+- Adopt the corrected public `go-library-tools` v1.6.1 workflow and validate
+  cohesion metadata with its proportional-assurance contract.
 
 - Adopt the checksum-verified `go-library-tools` v1.4.0 CLI and immutable W14
   reusable workflow, and enforce online specification monitoring from local

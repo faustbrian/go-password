@@ -40,6 +40,30 @@
     },
     {
       "module_directory": ".",
+      "directory": "adapters/authentication",
+      "name": "passwordauthentication",
+      "import_path": "github.com/faustbrian/go-password/adapters/authentication",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "adapters/service",
+      "name": "passwordservice",
+      "import_path": "github.com/faustbrian/go-password/adapters/service",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
       "directory": "passwordauth",
       "name": "passwordauth",
       "import_path": "github.com/faustbrian/go-password/passwordauth",

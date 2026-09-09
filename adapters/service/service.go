@@ -5,26 +5,32 @@ import (
 	"errors"
 
 	password "github.com/faustbrian/go-password"
-	serviceadapter "github.com/faustbrian/go-password/adapters/service"
 )
 
 // ErrInvalidConfig reports a missing admission controller.
 var ErrInvalidConfig = errors.New("passwordservice: invalid configuration")
 
-// Lifecycle preserves the released service lifecycle adapter type.
-type Lifecycle struct{ adapter *serviceadapter.Lifecycle }
+// Lifecycle exposes service-compatible start and stop hooks for Admission.
+type Lifecycle struct{ admission *password.Admission }
 
 // New wraps a caller-owned admission controller.
 func New(admission *password.Admission) (*Lifecycle, error) {
-	adapter, err := serviceadapter.New(admission)
-	if err != nil {
+	if admission == nil {
 		return nil, ErrInvalidConfig
 	}
-	return &Lifecycle{adapter: adapter}, nil
+	return &Lifecycle{admission: admission}, nil
 }
 
 // Start validates the context and rejects restart after shutdown.
-func (l *Lifecycle) Start(ctx context.Context) error { return l.adapter.Start(ctx) }
+func (l *Lifecycle) Start(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if l.admission.Closed() {
+		return password.ErrClosed
+	}
+	return nil
+}
 
 // Stop closes admission and drains active work within ctx.
-func (l *Lifecycle) Stop(ctx context.Context) error { return l.adapter.Stop(ctx) }
+func (l *Lifecycle) Stop(ctx context.Context) error { return l.admission.Shutdown(ctx) }

@@ -78,7 +78,9 @@ on deployment hardware before setting concurrency or pod limits.
 
 ## Laravel migration
 
-Use `VerifyAndUpgrade` or `passwordauth.Authenticator` during successful login.
+Use `VerifyAndUpgrade` or
+`passwordauthentication.Authenticator` from `adapters/authentication` during
+successful login.
 Laravel `$2y$` bcrypt and PHC Argon2id strings are accepted. Never replace the
 database value until verification succeeds and the new hash is durably written
 with an optimistic comparison against the old value.
@@ -116,8 +118,10 @@ PostgreSQL examples.
 | root | Policy, limits, parsing, admission, service, errors, observations |
 | `argon2id` | Argon2id service constructors |
 | `bcrypt` | Bcrypt compatibility constructors |
-| `passwordauth` | Application lookup and explicit CAS upgrade adapter |
-| `passwordservice` | Admission lifecycle hooks |
+| `adapters/authentication` | Application lookup and explicit CAS upgrade adapter |
+| `adapters/service` | Admission lifecycle hooks |
+| `passwordauth` | Deprecated compatibility path for `adapters/authentication` |
+| `passwordservice` | Deprecated compatibility path for `adapters/service` |
 | `passwordtest` | Synthetic fixtures and deterministic test entropy |
 
 ## Documentation
@@ -137,8 +141,8 @@ PostgreSQL examples.
 - [Support](SUPPORT.md) and [security policy](SECURITY.md)
 
 For ecosystem-wide package selection, construction, ownership, and lifecycle
-guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
-and its [Service edge family](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection).
+guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.1/docs/ecosystem/README.md)
+and its [Service edge family](https://github.com/faustbrian/go-library-tools/blob/v1.6.1/docs/ecosystem/design-language.md#package-families-and-selection).
 
 ## License
 
