@@ -36,7 +36,7 @@ value may win. The losing login still verified successfully.
 Not transparently. It would be a separate versioned scheme incompatible with
 ordinary Argon2id/bcrypt hashes. The package currently rejects over-limit input.
 
-## Does `passwordauth` replace `authentication`?
+## Does `adapters/authentication` replace `authentication`?
 
 No. It supplies lookup/verification/CAS data that an application adapter can
 turn into a `authentication` principal.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 	"sync"
 	"testing"
@@ -342,6 +343,33 @@ func TestErrorFormattingDoesNotExposeCause(t *testing.T) {
 	for _, format := range []string{"%s", "%q", "%v", "%+v", "%#v"} {
 		if rendered := fmt.Sprintf(format, err); strings.Contains(rendered, "sensitive") || strings.Contains(rendered, "database") {
 			t.Fatalf("format %s leaked cause: %s", format, rendered)
+		}
+	}
+}
+
+func TestDeprecatedPathPreservesReleasedIdentityAndErrorText(t *testing.T) {
+	types := []reflect.Type{
+		reflect.TypeOf(passwordauth.Error{}),
+		reflect.TypeOf(passwordauth.Record{}),
+		reflect.TypeOf(passwordauth.Config{}),
+		reflect.TypeOf(passwordauth.Authenticator{}),
+		reflect.TypeOf(passwordauth.Upgrade{}),
+		reflect.TypeOf(passwordauth.Result{}),
+	}
+	for _, typ := range types {
+		if got := typ.PkgPath(); got != "github.com/faustbrian/go-password/passwordauth" {
+			t.Fatalf("%s package path = %q", typ.Name(), got)
+		}
+	}
+	want := map[error]string{
+		passwordauth.ErrInvalidConfig: "passwordauth: invalid configuration",
+		passwordauth.ErrRejected:      "passwordauth: authentication rejected",
+		passwordauth.ErrUnavailable:   "passwordauth: authentication unavailable",
+		passwordauth.ErrCanceled:      "passwordauth: authentication canceled",
+	}
+	for sentinel, expected := range want {
+		if got := sentinel.Error(); got != expected {
+			t.Fatalf("sentinel text = %q, want %q", got, expected)
 		}
 	}
 }

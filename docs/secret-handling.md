@@ -18,7 +18,7 @@ and endpoint responses remain distinguishable.
 
 Applications should use a valid dummy hash for absent users, return uniform
 public authentication failures, rate-limit endpoints, and avoid exposing whether
-a username exists. `passwordauth` requires dummy work but cannot equalize caller
+a username exists. `adapters/authentication` requires dummy work but cannot equalize caller
 lookup, network, database, or response behavior.
 
 Encoded password hashes are not plaintext passwords, but they enable offline

@@ -1,3 +1,4 @@
-// Package passwordservice adapts password admission shutdown to caller-owned
-// service lifecycle hooks without importing or owning a service runtime.
+// Package passwordservice preserves the released service adapter path.
+//
+// Deprecated: use github.com/faustbrian/go-password/adapters/service.
 package passwordservice

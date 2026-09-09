@@ -46,6 +46,30 @@
         },
         {
           "module_directory": ".",
+          "directory": "adapters/authentication",
+          "name": "passwordauthentication",
+          "import_path": "github.com/faustbrian/go-password/adapters/authentication",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
+          "directory": "adapters/service",
+          "name": "passwordservice",
+          "import_path": "github.com/faustbrian/go-password/adapters/service",
+          "kind": "public",
+          "production": true,
+          "executable": true,
+          "coverage_required": true,
+          "build_required": true,
+          "build_tags": []
+        },
+        {
+          "module_directory": ".",
           "directory": "passwordauth",
           "name": "passwordauth",
           "import_path": "github.com/faustbrian/go-password/passwordauth",
@@ -108,10 +132,12 @@
         ],
         "package_selection": {
           "github.com/faustbrian/go-password": "Use for bounded password policy, hashing, verification, parsing, admission, redacted errors, and login-time upgrades.",
+          "github.com/faustbrian/go-password/adapters/authentication": "Use at an authentication boundary for explicit record lookup and compare-and-swap hash upgrades.",
+          "github.com/faustbrian/go-password/adapters/service": "Use to bind password admission shutdown to an application service lifecycle.",
           "github.com/faustbrian/go-password/argon2id": "Use to construct password services with explicit or recommended Argon2id parameters.",
           "github.com/faustbrian/go-password/bcrypt": "Use to construct bcrypt-compatible password services for migration and interoperability.",
-          "github.com/faustbrian/go-password/passwordauth": "Use at an authentication boundary for explicit record lookup and compare-and-swap hash upgrades.",
-          "github.com/faustbrian/go-password/passwordservice": "Use to bind password admission shutdown to an application service lifecycle.",
+          "github.com/faustbrian/go-password/passwordauth": "Deprecated compatibility path for the authentication adapter; use adapters/authentication.",
+          "github.com/faustbrian/go-password/passwordservice": "Deprecated compatibility path for the service lifecycle adapter; use adapters/service.",
           "github.com/faustbrian/go-password/passwordtest": "Use only in tests for deterministic entropy and synthetic password services."
         },
         "lifecycle_status": "active",
@@ -137,6 +163,8 @@
         },
         "optional_owned_dependencies": [],
         "adapters": [
+          "github.com/faustbrian/go-password/adapters/authentication",
+          "github.com/faustbrian/go-password/adapters/service",
           "github.com/faustbrian/go-password/passwordauth",
           "github.com/faustbrian/go-password/passwordservice"
         ],

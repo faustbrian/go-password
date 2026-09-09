@@ -1,4 +1,4 @@
-package passwordauth
+package passwordauthentication
 
 import (
 	"context"
@@ -7,18 +7,17 @@ import (
 	"reflect"
 
 	password "github.com/faustbrian/go-password"
-	passwordauthentication "github.com/faustbrian/go-password/adapters/authentication"
 )
 
 var (
 	// ErrInvalidConfig reports a missing service, lookup, or valid dummy hash.
-	ErrInvalidConfig = errors.New("passwordauth: invalid configuration")
+	ErrInvalidConfig = errors.New("passwordauthentication: invalid configuration")
 	// ErrRejected reports a missing identity or password mismatch.
-	ErrRejected = errors.New("passwordauth: authentication rejected")
+	ErrRejected = errors.New("passwordauthentication: authentication rejected")
 	// ErrUnavailable reports lookup, stored-data, resource, or entropy failure.
-	ErrUnavailable = errors.New("passwordauth: authentication unavailable")
+	ErrUnavailable = errors.New("passwordauthentication: authentication unavailable")
 	// ErrCanceled reports caller cancellation or deadline expiration.
-	ErrCanceled = errors.New("passwordauth: authentication canceled")
+	ErrCanceled = errors.New("passwordauthentication: authentication canceled")
 )
 
 // Error is a classified authentication adapter error that omits Cause text.
@@ -29,16 +28,14 @@ type Error struct {
 
 func newError(kind, cause error) *Error { return &Error{kind: kind, cause: cause} }
 
-// Kind returns the stable passwordauth sentinel.
+// Kind returns the stable passwordauthentication sentinel.
 func (e *Error) Kind() error { return e.kind }
 
 // Cause returns the underlying operational error without formatting it.
 func (e *Error) Cause() error { return e.cause }
 
-// Error returns only the released stable classification.
-func (e *Error) Error() string {
-	return e.kind.Error()
-}
+// Error returns only the stable classification.
+func (e *Error) Error() string { return e.kind.Error() }
 
 // Unwrap exposes classification and cause to errors.Is/errors.As.
 func (e *Error) Unwrap() []error {
@@ -61,7 +58,7 @@ type Record struct {
 func (Record) String() string { return "password record [redacted]" }
 
 // GoString returns a redacted Go-syntax representation.
-func (Record) GoString() string { return "passwordauth.Record{redacted}" }
+func (Record) GoString() string { return "passwordauthentication.Record{redacted}" }
 
 // Format redacts every fmt formatting verb.
 func (Record) Format(state fmt.State, _ rune) {
@@ -84,35 +81,23 @@ type Config struct {
 	DummyHash string
 }
 
-// Authenticator preserves the released adapter type while delegating behavior
-// to the target-oriented successor.
+// Authenticator verifies lookup records and returns explicit CAS upgrade data.
 type Authenticator struct {
-	adapter *passwordauthentication.Authenticator
-}
-
-type lookupAdapter struct{ lookup Lookup }
-
-// LookupPassword converts the released record type for successor delegation.
-func (adapter lookupAdapter) LookupPassword(ctx context.Context, username string) (passwordauthentication.Record, bool, error) {
-	record, found, err := adapter.lookup.LookupPassword(ctx, username)
-	return passwordauthentication.Record{Subject: record.Subject, EncodedHash: record.EncodedHash}, found, err
+	passwords *password.Service
+	lookup    Lookup
+	dummy     password.EncodedHash
 }
 
 // New validates all collaborators and parses DummyHash before accepting work.
 func New(config Config) (*Authenticator, error) {
-	var lookup passwordauthentication.Lookup
-	if !nilLookup(config.Lookup) {
-		lookup = lookupAdapter{lookup: config.Lookup}
+	if config.Passwords == nil || nilLookup(config.Lookup) || config.DummyHash == "" {
+		return nil, newError(ErrInvalidConfig, nil)
 	}
-	adapter, err := passwordauthentication.New(passwordauthentication.Config{
-		Passwords: config.Passwords,
-		Lookup:    lookup,
-		DummyHash: config.DummyHash,
-	})
+	dummy, err := password.ParseEncodedHash(config.DummyHash, config.Passwords.Policy().Limits())
 	if err != nil {
-		return nil, translateError(err)
+		return nil, newError(ErrInvalidConfig, err)
 	}
-	return &Authenticator{adapter: adapter}, nil
+	return &Authenticator{passwords: config.Passwords, lookup: config.Lookup, dummy: dummy}, nil
 }
 
 func nilLookup(lookup Lookup) bool {
@@ -126,22 +111,6 @@ func nilLookup(lookup Lookup) bool {
 	default:
 		return false
 	}
-}
-
-func translateError(err error) error {
-	classified := err.(*passwordauthentication.Error)
-	var kind error
-	switch classified.Kind() {
-	case passwordauthentication.ErrInvalidConfig:
-		kind = ErrInvalidConfig
-	case passwordauthentication.ErrRejected:
-		kind = ErrRejected
-	case passwordauthentication.ErrUnavailable:
-		kind = ErrUnavailable
-	case passwordauthentication.ErrCanceled:
-		kind = ErrCanceled
-	}
-	return newError(kind, classified.Cause())
 }
 
 // Upgrade is an immutable optimistic compare-and-swap pair.
@@ -163,7 +132,7 @@ func (u Upgrade) Replacement() password.EncodedHash { return u.replacement }
 func (Upgrade) String() string { return "password upgrade [redacted]" }
 
 // GoString returns a redacted Go-syntax representation.
-func (Upgrade) GoString() string { return "passwordauth.Upgrade{redacted}" }
+func (Upgrade) GoString() string { return "passwordauthentication.Upgrade{redacted}" }
 
 // Result is a successful stable subject plus optional CAS upgrade.
 type Result struct {
@@ -181,18 +150,50 @@ func (r Result) Upgrade() Upgrade { return r.upgrade }
 func (Result) String() string { return "password authentication result" }
 
 // GoString returns a redacted Go-syntax representation.
-func (Result) GoString() string { return "passwordauth.Result{redacted}" }
+func (Result) GoString() string { return "passwordauthentication.Result{redacted}" }
 
-// Authenticate delegates to the target-oriented successor while preserving
-// the released result and error types.
+// Authenticate performs lookup, dummy work for absence, verification, and an
+// in-memory replacement hash. It never writes persistence or constructs users.
 func (a *Authenticator) Authenticate(ctx context.Context, username string, secret []byte) (Result, error) {
-	result, err := a.adapter.Authenticate(ctx, username, secret)
-	if err != nil {
-		return Result{}, translateError(err)
+	if err := ctx.Err(); err != nil {
+		return Result{}, newError(ErrCanceled, err)
 	}
-	upgrade := result.Upgrade()
-	return Result{
-		subject: result.Subject(),
-		upgrade: Upgrade{expected: upgrade.Expected(), replacement: upgrade.Replacement()},
-	}, nil
+	record, found, err := a.lookup.LookupPassword(ctx, username)
+	if err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return Result{}, newError(ErrCanceled, err)
+		}
+		return Result{}, newError(ErrUnavailable, err)
+	}
+	encoded := a.dummy.String()
+	expected := password.EncodedHash{}
+	if found {
+		if record.Subject == "" || record.EncodedHash == "" {
+			return Result{}, newError(ErrUnavailable, nil)
+		}
+		expected, err = password.ParseEncodedHash(record.EncodedHash, a.passwords.Policy().Limits())
+		if err != nil {
+			return Result{}, newError(ErrUnavailable, err)
+		}
+		encoded = expected.String()
+	}
+	verification, replacement, err := a.passwords.VerifyAndUpgrade(ctx, secret, encoded)
+	if err != nil {
+		switch {
+		case errors.Is(err, password.ErrCanceled):
+			return Result{}, newError(ErrCanceled, err)
+		case errors.Is(err, password.ErrMismatch):
+			return Result{}, newError(ErrRejected, err)
+		default:
+			return Result{}, newError(ErrUnavailable, err)
+		}
+	}
+	if !found {
+		return Result{}, newError(ErrRejected, nil)
+	}
+	upgrade := Upgrade{}
+	if verification.NeedsRehash() {
+		upgrade = Upgrade{expected: expected, replacement: replacement}
+	}
+	return Result{subject: record.Subject, upgrade: upgrade}, nil
 }
