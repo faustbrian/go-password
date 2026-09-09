@@ -129,17 +129,22 @@ func nilLookup(lookup Lookup) bool {
 }
 
 func translateError(err error) error {
-	classified := err.(*passwordauthentication.Error)
+	var classified *passwordauthentication.Error
+	if !errors.As(err, &classified) {
+		return err
+	}
 	var kind error
-	switch classified.Kind() {
-	case passwordauthentication.ErrInvalidConfig:
+	switch {
+	case errors.Is(classified.Kind(), passwordauthentication.ErrInvalidConfig):
 		kind = ErrInvalidConfig
-	case passwordauthentication.ErrRejected:
+	case errors.Is(classified.Kind(), passwordauthentication.ErrRejected):
 		kind = ErrRejected
-	case passwordauthentication.ErrUnavailable:
+	case errors.Is(classified.Kind(), passwordauthentication.ErrUnavailable):
 		kind = ErrUnavailable
-	case passwordauthentication.ErrCanceled:
+	case errors.Is(classified.Kind(), passwordauthentication.ErrCanceled):
 		kind = ErrCanceled
+	default:
+		return err
 	}
 	return newError(kind, classified.Cause())
 }

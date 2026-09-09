@@ -349,12 +349,12 @@ func TestErrorFormattingDoesNotExposeCause(t *testing.T) {
 
 func TestDeprecatedPathPreservesReleasedIdentityAndErrorText(t *testing.T) {
 	types := []reflect.Type{
-		reflect.TypeOf(passwordauth.Error{}),
-		reflect.TypeOf(passwordauth.Record{}),
-		reflect.TypeOf(passwordauth.Config{}),
-		reflect.TypeOf(passwordauth.Authenticator{}),
-		reflect.TypeOf(passwordauth.Upgrade{}),
-		reflect.TypeOf(passwordauth.Result{}),
+		reflect.TypeFor[passwordauth.Error](),
+		reflect.TypeFor[passwordauth.Record](),
+		reflect.TypeFor[passwordauth.Config](),
+		reflect.TypeFor[passwordauth.Authenticator](),
+		reflect.TypeFor[passwordauth.Upgrade](),
+		reflect.TypeFor[passwordauth.Result](),
 	}
 	for _, typ := range types {
 		if got := typ.PkgPath(); got != "github.com/faustbrian/go-password/passwordauth" {

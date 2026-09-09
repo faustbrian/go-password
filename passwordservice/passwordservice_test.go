@@ -11,7 +11,7 @@ import (
 )
 
 func TestLifecycleProvidesServiceCompatibleHooks(t *testing.T) {
-	if got := reflect.TypeOf(passwordservice.Lifecycle{}).PkgPath(); got != "github.com/faustbrian/go-password/passwordservice" {
+	if got := reflect.TypeFor[passwordservice.Lifecycle]().PkgPath(); got != "github.com/faustbrian/go-password/passwordservice" {
 		t.Fatalf("Lifecycle package path = %q", got)
 	}
 	a, err := password.NewAdmission(1, 0)
