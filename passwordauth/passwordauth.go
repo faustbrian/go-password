@@ -130,9 +130,7 @@ func nilLookup(lookup Lookup) bool {
 
 func translateError(err error) error {
 	var classified *passwordauthentication.Error
-	if !errors.As(err, &classified) {
-		return err
-	}
+	errors.As(err, &classified)
 	var kind error
 	switch {
 	case errors.Is(classified.Kind(), passwordauthentication.ErrInvalidConfig):
@@ -143,8 +141,6 @@ func translateError(err error) error {
 		kind = ErrUnavailable
 	case errors.Is(classified.Kind(), passwordauthentication.ErrCanceled):
 		kind = ErrCanceled
-	default:
-		return err
 	}
 	return newError(kind, classified.Cause())
 }
