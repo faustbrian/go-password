@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-password.svg)](https://pkg.go.dev/github.com/faustbrian/go-password)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-password?sort=semver)](https://github.com/faustbrian/go-password/releases)
-[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `password` is a narrowly scoped password hashing, verification, parsing,
@@ -15,11 +15,11 @@ and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
 endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 
-The module is a stable v1 public library. It requires Go 1.26.6 or newer.
+The module is a stable v1 public library. It requires Go 1.27.0 or newer.
 
 ## Requirements
 
-- Go 1.26.6 or newer.
+- Go 1.27.0 or newer.
 - `golang.org/x/crypto` v0.54.0.
 
 ## Install

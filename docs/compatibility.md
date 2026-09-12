@@ -14,7 +14,7 @@ Observable standards and profile choices are recorded in the
 | Argon2 version other than 19 | No | No | Unsupported version |
 | Scrypt/PBKDF2/custom formats | No | No | Adapter not present |
 
-Minimum Go version is 1.26.6. The pinned cryptographic dependency is
+Minimum Go version is 1.26.6; the tested toolchain is Go 1.27.0. The pinned cryptographic dependency is
 `golang.org/x/crypto` v0.54.0. The PHP corpus was generated with PHP 8.5.8 and
 contains only the literal synthetic password documented in the migration guide.
 Producer commands and source provenance are recorded in
