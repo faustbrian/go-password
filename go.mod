@@ -1,6 +1,6 @@
 module github.com/faustbrian/go-password
 
-go 1.26.6
+go 1.27.0
 
 require golang.org/x/crypto v0.54.0
 
