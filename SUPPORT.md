@@ -9,6 +9,6 @@ Use the same issue tracker for adoption questions and bounded design
 exploration. Use the private process in [`SECURITY.md`](SECURITY.md) for
 vulnerabilities.
 
-Support covers the latest stable v1 release according to
+Support covers the latest published stable major according to
 [the compatibility matrix](docs/compatibility.md). Older releases and the
 `main` branch are unsupported; upgrade before opening a request.

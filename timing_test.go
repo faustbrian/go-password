@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func TestArgon2idMatchMismatchTimingSmoke(t *testing.T) {
-	svc, err := password.NewTestService(testArgonPolicy(t), &repeatingReader{value: 7})
+	svc, err := password.New(testArgonPolicy(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func TestMalformedHashTimingStaysBeforePrimitive(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	svc, err := password.NewTestService(policy, &repeatingReader{value: 7})
+	svc, err := password.New(policy)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,13 +99,4 @@ func TestMalformedHashTimingStaysBeforePrimitive(t *testing.T) {
 	if malformed[45] >= mismatches[5] {
 		t.Fatalf("malformed path reached primitive timing: malformed_p90=%s mismatch_p10=%s", malformed[45], mismatches[5])
 	}
-}
-
-type repeatingReader struct{ value byte }
-
-func (r *repeatingReader) Read(destination []byte) (int, error) {
-	for index := range destination {
-		destination[index] = r.value
-	}
-	return len(destination), nil
 }

@@ -1,6 +1,6 @@
 package argon2id
 
-import password "github.com/faustbrian/go-password"
+import password "github.com/faustbrian/go-password/v2"
 
 // New validates parameters and limits and constructs an Argon2id service.
 func New(parameters password.Argon2idParameters, limits password.Limits, options ...password.Option) (*password.Service, error) {

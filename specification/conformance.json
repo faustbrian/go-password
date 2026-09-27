@@ -64,14 +64,14 @@
     {
       "id": "PASSWORD-DEC-006",
       "authoritative_sources": ["rfc9106-source"],
-      "executable_evidence": ["TestServiceFailureAndBoundaryMatrix", "TestHostileHashesAreRejectedBeforeAdmission", "TestClassifiedErrorDoesNotExposeCause", "TestStandardLoggingDoesNotExposeHashOrErrorCause"],
+      "executable_evidence": ["TestServiceFailureAndBoundaryMatrix", "TestHostileHashesAreRejectedBeforeAdmission", "TestClassifiedErrorDoesNotExposeCause", "TestStandardLoggingDoesNotExposeHashOrErrorCause", "TestNewRejectsDummyHashThatDoesNotMatchTargetWork", "TestRecordAndConfigStructuredLoggingAreRedacted"],
       "fixtures": ["passwordtest/passwordtest.go"],
       "fuzz": ["FuzzBoundedVerify"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
       "differential_evidence": [],
       "differential_classification": "not assessed",
-      "public_behavior": ["Verification distinguishes valid-hash mismatch from malformed, unsupported, resource, cancellation, and lifecycle failures without exposing secrets."]
+      "public_behavior": ["Verification distinguishes valid-hash mismatch from malformed, unsupported, resource, cancellation, and lifecycle failures without exposing secrets; authentication dummy work matches the complete target profile."]
     },
     {
       "id": "PASSWORD-DEC-007",
@@ -83,7 +83,7 @@
       "interoperability_classification": "not assessed",
       "differential_evidence": [],
       "differential_classification": "not assessed",
-      "public_behavior": ["Login-time upgrade recommendations never lower algorithm strength, bcrypt cost, or any Argon2id parameter dimension."]
+      "public_behavior": ["Login-time upgrade recommendations never lower algorithm strength, bcrypt cost, or ordered Argon2id cost and entropy dimensions; parallelism follows the target deployment shape only under that guard."]
     }
   ]
 }

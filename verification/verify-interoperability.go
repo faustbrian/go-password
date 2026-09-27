@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"os"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 const syntheticPassword = "synthetic password"

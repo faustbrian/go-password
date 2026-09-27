@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordtest"
 )
 
 func TestNeedsRehashNeverRecommendsDowngrade(t *testing.T) {

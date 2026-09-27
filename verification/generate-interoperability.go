@@ -4,21 +4,26 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
-	"strings"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
+	"golang.org/x/crypto/argon2"
 )
 
 func main() {
-	argon, err := password.NewTestService(password.DefaultPolicy(), strings.NewReader(strings.Repeat("a", 64)))
-	if err != nil {
-		panic(err)
-	}
-	argonHash, err := argon.Hash(context.Background(), []byte("synthetic password"))
-	if err != nil {
-		panic(err)
-	}
+	parameters := password.DefaultPolicy().Argon2idParameters()
+	salt := []byte("aaaaaaaaaaaaaaaa")
+	digest := argon2.IDKey([]byte("synthetic password"), salt, parameters.Time, parameters.MemoryKiB, parameters.Parallelism, parameters.OutputLength)
+	argonHash := fmt.Sprintf(
+		"$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
+		parameters.Version,
+		parameters.MemoryKiB,
+		parameters.Time,
+		parameters.Parallelism,
+		base64.RawStdEncoding.EncodeToString(salt),
+		base64.RawStdEncoding.EncodeToString(digest),
+	)
 	limits := password.DefaultPolicy().Limits()
 	bcryptPolicy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Bcrypt, BcryptCost: 10, Limits: limits})
 	if err != nil {
@@ -32,6 +37,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(argonHash.String())
+	fmt.Println(argonHash)
 	fmt.Println(bcryptHash.String())
 }

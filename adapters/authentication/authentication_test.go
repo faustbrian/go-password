@@ -1,15 +1,19 @@
 package passwordauthentication_test
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
+	"runtime/debug"
+	"slices"
 	"strings"
 	"testing"
+	"time"
 
-	password "github.com/faustbrian/go-password"
-	passwordauthentication "github.com/faustbrian/go-password/adapters/authentication"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	passwordauthentication "github.com/faustbrian/go-password/v2/adapters/authentication"
 )
 
 type lookupFunc func(context.Context, string) (passwordauthentication.Record, bool, error)
@@ -17,6 +21,10 @@ type lookupFunc func(context.Context, string) (passwordauthentication.Record, bo
 func (f lookupFunc) LookupPassword(ctx context.Context, username string) (passwordauthentication.Record, bool, error) {
 	return f(ctx, username)
 }
+
+type diagnosticCause struct{ Marker string }
+
+func (cause diagnosticCause) Error() string { return cause.Marker }
 
 func TestAuthenticateReturnsExplicitCASUpgrade(t *testing.T) {
 	limits := password.DefaultPolicy().Limits()
@@ -30,7 +38,7 @@ func TestAuthenticateReturnsExplicitCASUpgrade(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	passwords, err := passwordtest.NewService(policy, []byte("synthetic deterministic entropy"))
+	passwords, err := password.New(policy)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +54,7 @@ func TestAuthenticateReturnsExplicitCASUpgrade(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dummy, err := bcryptPasswords.Hash(context.Background(), []byte("synthetic dummy password"))
+	dummy, err := passwords.Hash(context.Background(), []byte("synthetic dummy password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +105,7 @@ func testServices(t *testing.T) (*password.Service, string, string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	passwords, err := passwordtest.NewService(policy, []byte("synthetic deterministic entropy"))
+	passwords, err := password.New(policy)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +121,7 @@ func testServices(t *testing.T) (*password.Service, string, string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dummy, err := bcryptPasswords.Hash(context.Background(), []byte("synthetic dummy password"))
+	dummy, err := passwords.Hash(context.Background(), []byte("synthetic dummy password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -156,6 +164,196 @@ func TestConfigurationAndClassifiedErrors(t *testing.T) {
 	}
 	if _, err := passwordauthentication.New(passwordauthentication.Config{Passwords: service, Lookup: missingLookup{}, DummyHash: dummy}); err != nil {
 		t.Fatalf("value lookup error = %v", err)
+	}
+}
+
+func TestNewRejectsDummyHashThatDoesNotMatchTargetWork(t *testing.T) {
+	validLookup := lookupFunc(func(context.Context, string) (passwordauthentication.Record, bool, error) {
+		return passwordauthentication.Record{}, false, nil
+	})
+	limits := password.DefaultPolicy().Limits()
+	limits.MemoryKiB = 64
+	limits.Argon2Time = 2
+	targetParameters := password.Argon2idParameters{Version: 19, Time: 1, MemoryKiB: 16, Parallelism: 1, SaltLength: 8, OutputLength: 16}
+	targetPolicy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Argon2id, Argon2id: targetParameters, Limits: limits})
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := password.New(targetPolicy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	matchingDummy, err := service.Hash(context.Background(), []byte("synthetic dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := passwordauthentication.New(passwordauthentication.Config{Passwords: service, Lookup: validLookup, DummyHash: matchingDummy.String()}); err != nil {
+		t.Fatalf("matching dummy rejected: %v", err)
+	}
+
+	bcryptPolicy, err := password.NewPolicy(password.PolicyConfig{
+		Algorithm:  password.Bcrypt,
+		BcryptCost: 4,
+		Limits:     limits,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	bcryptService, err := password.New(bcryptPolicy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	bcryptDummy, err := bcryptService.Hash(context.Background(), []byte("synthetic dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		name       string
+		parameters password.Argon2idParameters
+	}{
+		{"time", password.Argon2idParameters{Version: 19, Time: 2, MemoryKiB: 16, Parallelism: 1, SaltLength: 8, OutputLength: 16}},
+		{"memory", password.Argon2idParameters{Version: 19, Time: 1, MemoryKiB: 32, Parallelism: 1, SaltLength: 8, OutputLength: 16}},
+		{"parallelism", password.Argon2idParameters{Version: 19, Time: 1, MemoryKiB: 16, Parallelism: 2, SaltLength: 8, OutputLength: 16}},
+		{"salt length", password.Argon2idParameters{Version: 19, Time: 1, MemoryKiB: 16, Parallelism: 1, SaltLength: 9, OutputLength: 16}},
+		{"output length", password.Argon2idParameters{Version: 19, Time: 1, MemoryKiB: 16, Parallelism: 1, SaltLength: 8, OutputLength: 17}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			differentPolicy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Argon2id, Argon2id: tt.parameters, Limits: limits})
+			if err != nil {
+				t.Fatal(err)
+			}
+			differentService, err := password.New(differentPolicy)
+			if err != nil {
+				t.Fatal(err)
+			}
+			differentDummy, err := differentService.Hash(context.Background(), []byte("synthetic dummy password"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			assertMismatchedDummy(t, service, validLookup, differentDummy.String())
+		})
+	}
+	assertMismatchedDummy(t, service, validLookup, bcryptDummy.String())
+}
+
+func assertMismatchedDummy(t *testing.T, service *password.Service, lookup passwordauthentication.Lookup, dummy string) {
+	t.Helper()
+	_, err := passwordauthentication.New(passwordauthentication.Config{Passwords: service, Lookup: lookup, DummyHash: dummy})
+	if !errors.Is(err, passwordauthentication.ErrInvalidConfig) {
+		t.Fatalf("mismatched dummy error = %v", err)
+	}
+}
+
+func TestNewRejectsDummyHashWithDifferentBcryptCost(t *testing.T) {
+	limits := password.DefaultPolicy().Limits()
+	lookup := lookupFunc(func(context.Context, string) (passwordauthentication.Record, bool, error) {
+		return passwordauthentication.Record{}, false, nil
+	})
+	serviceForCost := func(cost int) *password.Service {
+		t.Helper()
+		policy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Bcrypt, BcryptCost: cost, Limits: limits})
+		if err != nil {
+			t.Fatal(err)
+		}
+		service, err := password.New(policy)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return service
+	}
+	target := serviceForCost(4)
+	matchingDummy, err := target.Hash(context.Background(), []byte("synthetic dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := passwordauthentication.New(passwordauthentication.Config{Passwords: target, Lookup: lookup, DummyHash: matchingDummy.String()}); err != nil {
+		t.Fatalf("matching bcrypt dummy rejected: %v", err)
+	}
+	differentDummy, err := serviceForCost(5).Hash(context.Background(), []byte("synthetic dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertMismatchedDummy(t, target, lookup, differentDummy.String())
+}
+
+func TestMissingAndTargetMismatchTimingSmoke(t *testing.T) {
+	previousGCPercent := debug.SetGCPercent(-1)
+	defer debug.SetGCPercent(previousGCPercent)
+
+	limits := password.DefaultPolicy().Limits()
+	limits.MemoryKiB = 2 * 1024
+	limits.Argon2Time = 2
+	policy, err := password.NewPolicy(password.PolicyConfig{
+		Algorithm: password.Argon2id,
+		Argon2id: password.Argon2idParameters{
+			Version: 19, Time: 2, MemoryKiB: 2 * 1024, Parallelism: 1,
+			SaltLength: 8, OutputLength: 16,
+		},
+		Limits: limits,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := password.New(policy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	current, err := service.Hash(context.Background(), []byte("current password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	dummy, err := service.Hash(context.Background(), []byte("dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	lookup := lookupFunc(func(_ context.Context, username string) (passwordauthentication.Record, bool, error) {
+		if username == "missing" {
+			return passwordauthentication.Record{}, false, nil
+		}
+		return passwordauthentication.Record{Subject: "present", EncodedHash: current.String()}, true, nil
+	})
+	authenticator, err := passwordauthentication.New(passwordauthentication.Config{
+		Passwords: service,
+		Lookup:    lookup,
+		DummyHash: dummy.String(),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	measure := func(username string) time.Duration {
+		started := time.Now()
+		_, err := authenticator.Authenticate(context.Background(), username, []byte("wrong password"))
+		if !errors.Is(err, passwordauthentication.ErrRejected) {
+			t.Fatalf("Authenticate(%q) error = %v", username, err)
+		}
+		return time.Since(started)
+	}
+	const samples = 31
+	missing := make([]time.Duration, samples)
+	present := make([]time.Duration, samples)
+	for index := range samples {
+		if index%2 == 0 {
+			missing[index] = measure("missing")
+			present[index] = measure("present")
+		} else {
+			present[index] = measure("present")
+			missing[index] = measure("missing")
+		}
+	}
+	slices.Sort(missing)
+	slices.Sort(present)
+	index := (samples - 1) / 2
+	missingMedian := missing[index]
+	presentMedian := present[index]
+	if missingMedian > presentMedian*5 || presentMedian > missingMedian*5 {
+		t.Fatalf(
+			"obvious missing-user median timing regression: missing=%s present=%s",
+			missingMedian,
+			presentMedian,
+		)
 	}
 }
 
@@ -213,6 +411,23 @@ func TestAuthenticationFailureClassification(t *testing.T) {
 				t.Fatalf("error leaked cause: %v", err)
 			}
 		})
+	}
+}
+
+func TestAuthenticationErrorFormattingDoesNotExposeCause(t *testing.T) {
+	service, _, dummy := testServices(t)
+	lookup := lookupFunc(func(context.Context, string) (passwordauthentication.Record, bool, error) {
+		return passwordauthentication.Record{}, false, diagnosticCause{Marker: "sensitive database detail"}
+	})
+	authenticator, err := passwordauthentication.New(passwordauthentication.Config{Passwords: service, Lookup: lookup, DummyHash: dummy})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = authenticator.Authenticate(context.Background(), "synthetic-user", []byte("synthetic"))
+	for _, format := range []string{"%s", "%q", "%v", "%+v", "%#v"} {
+		if rendered := fmt.Sprintf(format, err); strings.Contains(rendered, "sensitive") || strings.Contains(rendered, "database") {
+			t.Fatalf("format %s leaked cause: %s", format, rendered)
+		}
 	}
 }
 
@@ -279,5 +494,40 @@ func TestCancellationNoUpgradeAndFormatting(t *testing.T) {
 	record := passwordauthentication.Record{Subject: "user", EncodedHash: current.String()}
 	if record.String() != "password record [redacted]" || record.GoString() != "passwordauthentication.Record{redacted}" || fmt.Sprintf("%v", record) != "password record [redacted]" {
 		t.Fatal("unsafe record formatting")
+	}
+}
+
+func TestRecordAndConfigStructuredLoggingAreRedacted(t *testing.T) {
+	const (
+		subjectMarker = "structured-log-subject-marker"
+		hashMarker    = "structured-log-hash-marker"
+	)
+	values := []any{
+		passwordauthentication.Record{Subject: subjectMarker, EncodedHash: hashMarker},
+		passwordauthentication.Config{DummyHash: hashMarker},
+	}
+	config := passwordauthentication.Config{DummyHash: hashMarker}
+	if config.String() != "password authentication config [redacted]" || config.GoString() != "passwordauthentication.Config{redacted}" {
+		t.Fatal("unsafe config formatting")
+	}
+	for _, value := range values {
+		for _, format := range []string{"%v", "%+v", "%#v"} {
+			rendered := fmt.Sprintf(format, value)
+			if strings.Contains(rendered, subjectMarker) || strings.Contains(rendered, hashMarker) {
+				t.Fatalf("format %s leaked sensitive field: %s", format, rendered)
+			}
+		}
+	}
+	for _, handler := range []func(*bytes.Buffer) slog.Handler{
+		func(output *bytes.Buffer) slog.Handler { return slog.NewJSONHandler(output, nil) },
+		func(output *bytes.Buffer) slog.Handler { return slog.NewTextHandler(output, nil) },
+	} {
+		for _, value := range values {
+			var output bytes.Buffer
+			slog.New(handler(&output)).Info("diagnostic", "value", value)
+			if strings.Contains(output.String(), subjectMarker) || strings.Contains(output.String(), hashMarker) {
+				t.Fatalf("structured log leaked sensitive field: %s", output.String())
+			}
+		}
 	}
 }

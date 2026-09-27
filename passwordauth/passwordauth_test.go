@@ -1,17 +1,18 @@
 package passwordauth_test
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 	"strings"
 	"sync"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordauth"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordauth"
 )
 
 type lookupFunc func(context.Context, string) (passwordauth.Record, bool, error)
@@ -19,6 +20,10 @@ type lookupFunc func(context.Context, string) (passwordauth.Record, bool, error)
 func (f lookupFunc) LookupPassword(ctx context.Context, username string) (passwordauth.Record, bool, error) {
 	return f(ctx, username)
 }
+
+type diagnosticCause struct{ Marker string }
+
+func (cause diagnosticCause) Error() string { return cause.Marker }
 
 type nilLookup struct{}
 
@@ -37,7 +42,7 @@ func services(t *testing.T) (*password.Service, string, string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	argon, err := passwordtest.NewService(argonPolicy, []byte("synthetic deterministic entropy"))
+	argon, err := password.New(argonPolicy)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +58,7 @@ func services(t *testing.T) (*password.Service, string, string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dummy, err := bcryptService.Hash(context.Background(), []byte("synthetic dummy password"))
+	dummy, err := argon.Hash(context.Background(), []byte("synthetic dummy password"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -314,6 +319,41 @@ func TestNoUpgradeCancellationInvalidRecordAndFormatting(t *testing.T) {
 	}
 }
 
+func TestRecordAndConfigStructuredLoggingAreRedacted(t *testing.T) {
+	const (
+		subjectMarker = "structured-log-subject-marker"
+		hashMarker    = "structured-log-hash-marker"
+	)
+	values := []any{
+		passwordauth.Record{Subject: subjectMarker, EncodedHash: hashMarker},
+		passwordauth.Config{DummyHash: hashMarker},
+	}
+	config := passwordauth.Config{DummyHash: hashMarker}
+	if config.String() != "password authentication config [redacted]" || config.GoString() != "passwordauth.Config{redacted}" {
+		t.Fatal("unsafe config formatting")
+	}
+	for _, value := range values {
+		for _, format := range []string{"%v", "%+v", "%#v"} {
+			rendered := fmt.Sprintf(format, value)
+			if strings.Contains(rendered, subjectMarker) || strings.Contains(rendered, hashMarker) {
+				t.Fatalf("format %s leaked sensitive field: %s", format, rendered)
+			}
+		}
+	}
+	for _, handler := range []func(*bytes.Buffer) slog.Handler{
+		func(output *bytes.Buffer) slog.Handler { return slog.NewJSONHandler(output, nil) },
+		func(output *bytes.Buffer) slog.Handler { return slog.NewTextHandler(output, nil) },
+	} {
+		for _, value := range values {
+			var output bytes.Buffer
+			slog.New(handler(&output)).Info("diagnostic", "value", value)
+			if strings.Contains(output.String(), subjectMarker) || strings.Contains(output.String(), hashMarker) {
+				t.Fatalf("structured log leaked sensitive field: %s", output.String())
+			}
+		}
+	}
+}
+
 func TestErrorUnwrapOmitsNilCause(t *testing.T) {
 	_, err := passwordauth.New(passwordauth.Config{})
 	var classified *passwordauth.Error
@@ -329,7 +369,7 @@ func TestErrorUnwrapOmitsNilCause(t *testing.T) {
 func TestErrorFormattingDoesNotExposeCause(t *testing.T) {
 	service, _, dummy := services(t)
 	lookup := lookupFunc(func(context.Context, string) (passwordauth.Record, bool, error) {
-		return passwordauth.Record{}, false, errors.New("sensitive database detail")
+		return passwordauth.Record{}, false, diagnosticCause{Marker: "sensitive database detail"}
 	})
 	authenticator, err := passwordauth.New(passwordauth.Config{Passwords: service, Lookup: lookup, DummyHash: dummy})
 	if err != nil {
@@ -357,7 +397,7 @@ func TestDeprecatedPathPreservesReleasedIdentityAndErrorText(t *testing.T) {
 		reflect.TypeFor[passwordauth.Result](),
 	}
 	for _, typ := range types {
-		if got := typ.PkgPath(); got != "github.com/faustbrian/go-password/passwordauth" {
+		if got := typ.PkgPath(); got != "github.com/faustbrian/go-password/v2/passwordauth" {
 			t.Fatalf("%s package path = %q", typ.Name(), got)
 		}
 	}

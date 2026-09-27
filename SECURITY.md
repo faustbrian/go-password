@@ -2,14 +2,17 @@
 
 ## Supported versions
 
-The latest stable v1 release receives security fixes. Older releases and the
-`main` branch are unsupported; upgrade before reporting unless the issue is a
-regression under active development.
+Security reports are accepted for the latest published stable major. A fix may
+require migration to a new major; security fixes are not guaranteed to be
+backported to the unsuffixed module. The `/v2` source becomes a supported public
+release only when its tag and module artifacts are published; prepared source
+alone is not publication. Legacy reports remain welcome but remediation may
+require migration. The `main` branch is not a supported deployment target.
 
 | Version | Supported |
 | --- | --- |
-| Latest stable v1 release | Yes |
-| Older releases | No |
+| v2.0.0 | Supported after public tag and module publication |
+| Legacy v1 releases | Reports accepted; fixes may require migration |
 | `main` | No |
 
 ## Reporting a vulnerability

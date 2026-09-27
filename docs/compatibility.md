@@ -14,8 +14,9 @@ Observable standards and profile choices are recorded in the
 | Argon2 version other than 19 | No | No | Unsupported version |
 | Scrypt/PBKDF2/custom formats | No | No | Adapter not present |
 
-Minimum Go version is 1.26.6; the tested toolchain is Go 1.27.0. The pinned cryptographic dependency is
-`golang.org/x/crypto` v0.54.0. The PHP corpus was generated with PHP 8.5.8 and
+Minimum and tested Go version is 1.27.0. The pinned cryptographic dependency is
+`golang.org/x/crypto` v0.57.0. The immutable v1.1.0 release specifies Go 1.26.6
+and pins `x/crypto` v0.54.0. The PHP corpus was generated with PHP 8.5.8 and
 contains only the literal synthetic password documented in the migration guide.
 Producer commands and source provenance are recorded in
 [vector and fixture provenance](vector-provenance.md).
@@ -23,11 +24,26 @@ Producer commands and source provenance are recorded in
 No format extension is inferred. New algorithms require an explicit adapter,
 grammar, bounds, vectors, fuzzing, migration policy, and compatibility entry.
 
+## Module v2 transition
+
+The `github.com/faustbrian/go-password/v2` module at v2.0.0 removes
+`password.NewTestService` and
+`passwordtest.NewService` so production-importable code cannot construct a
+password service with deterministic entropy. This is an intentional public API
+break isolated behind the v2 module path. Adopt it once the public tag and
+module artifacts are available. Before publication, retain released v1.1.0;
+then replace ordinary test construction with
+`password.New` and deterministic hash assertions with the `passwordtest`
+fixture constants. Encoded-hash formats and primitive verification remain
+unchanged. Authentication construction now rejects dummy hashes whose
+algorithm or complete work-factor parameters differ from the target policy.
+
 ## Adapter import paths
 
-New code should use `adapters/authentication` and `adapters/service`. The
-released `passwordauth` and `passwordservice` paths remain deprecated
-delegating facades with their original exported types, reflected package
-identities, error strings, and behavior. Migrating an import does not change
+New v2 code should use `adapters/authentication` and `adapters/service`. The
+`passwordauth` and `passwordservice` packages under `/v2` remain deprecated
+delegating facades with distinct facade types and stable error strings.
+Their v2 reflected identities are distinct from immutable v1 types. Moving
+between the v2 facade and its successor does not change
 password formats, persistence ownership, lifecycle ordering, or error
 classification.

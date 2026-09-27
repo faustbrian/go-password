@@ -6,13 +6,12 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io"
 	"strings"
 	"testing"
 	"time"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordtest"
 )
 
 func testLimits() password.Limits {
@@ -133,14 +132,6 @@ func TestEncodedHashParserMatrix(t *testing.T) {
 	}
 }
 
-type failingReader struct{}
-
-func (failingReader) Read([]byte) (int, error) { return 0, io.ErrUnexpectedEOF }
-
-type errorReader struct{ err error }
-
-func (r errorReader) Read([]byte) (int, error) { return 0, r.err }
-
 func TestServiceFailureAndBoundaryMatrix(t *testing.T) {
 	if _, err := password.New(password.Policy{}); !errors.Is(err, password.ErrInvalidPolicy) {
 		t.Fatalf("zero policy: %v", err)
@@ -151,22 +142,7 @@ func TestServiceFailureAndBoundaryMatrix(t *testing.T) {
 	if _, err := password.New(testArgonPolicy(t), password.WithAdmission(nil)); !errors.Is(err, password.ErrInvalidPolicy) {
 		t.Fatalf("nil admission: %v", err)
 	}
-	if _, err := password.NewTestService(testArgonPolicy(t), nil); !errors.Is(err, password.ErrEntropy) {
-		t.Fatalf("nil entropy: %v", err)
-	}
-	if _, err := password.NewTestService(password.Policy{}, strings.NewReader("entropy")); !errors.Is(err, password.ErrInvalidPolicy) {
-		t.Fatalf("invalid test policy: %v", err)
-	}
-
-	badEntropy, err := password.NewTestService(testArgonPolicy(t), failingReader{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err := badEntropy.Hash(context.Background(), []byte("secret")); !errors.Is(err, password.ErrEntropy) {
-		t.Fatalf("entropy: %v", err)
-	}
-
-	argon, err := password.NewTestService(testArgonPolicy(t), bytes.NewReader(bytes.Repeat([]byte{1}, 32)))
+	argon, err := password.New(testArgonPolicy(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -225,15 +201,6 @@ func TestServiceFailureAndBoundaryMatrix(t *testing.T) {
 	if _, err := bcryptService.Verify(context.Background(), []byte("secret"), "broken"); !errors.Is(err, password.ErrMalformedHash) {
 		t.Fatalf("malformed verify: %v", err)
 	}
-
-	upgrade, err := password.NewTestService(testArgonPolicy(t), failingReader{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	result, replacement, err := upgrade.VerifyAndUpgrade(context.Background(), []byte(passwordtest.SyntheticPassword), passwordtest.LaravelBcrypt)
-	if !result.Match() || !result.NeedsRehash() || replacement.String() != "" || !errors.Is(err, password.ErrEntropy) {
-		t.Fatalf("failed upgrade: %+v %q %v", result, replacement.String(), err)
-	}
 }
 
 func TestServiceAdmissionOverflowAndTimeout(t *testing.T) {
@@ -276,7 +243,7 @@ func TestServiceAdmissionOverflowAndTimeout(t *testing.T) {
 }
 
 func TestVerifyCancellationAndAdmission(t *testing.T) {
-	source, err := password.NewTestService(testArgonPolicy(t), strings.NewReader("12345678"))
+	source, err := password.New(testArgonPolicy(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -304,29 +271,6 @@ func TestVerifyCancellationAndAdmission(t *testing.T) {
 	}
 	if _, err := blocked.Verify(context.Background(), []byte("secret"), hash.String()); !errors.Is(err, password.ErrAdmission) {
 		t.Fatalf("admission verify: %v", err)
-	}
-}
-
-func TestClassifiedErrorDoesNotExposeCause(t *testing.T) {
-	service, err := password.NewTestService(testArgonPolicy(t), errorReader{err: errors.New("sensitive cause")})
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = service.Hash(context.Background(), []byte("synthetic"))
-	if strings.Contains(err.Error(), "sensitive") {
-		t.Fatalf("error leaked cause: %v", err)
-	}
-	var classified *password.Error
-	if !errors.As(err, &classified) || !errors.Is(err, password.ErrEntropy) {
-		t.Fatal("classification failed")
-	}
-	if !errors.Is(classified.Kind(), password.ErrEntropy) || classified.Operation() != "read salt" || classified.Cause() == nil {
-		t.Fatalf("classified error accessors = %v %q %v", classified.Kind(), classified.Operation(), classified.Cause())
-	}
-	for _, format := range []string{"%s", "%q", "%v", "%+v", "%#v"} {
-		if rendered := fmt.Sprintf(format, err); strings.Contains(rendered, "sensitive") {
-			t.Fatalf("format %s leaked cause: %s", format, rendered)
-		}
 	}
 }
 

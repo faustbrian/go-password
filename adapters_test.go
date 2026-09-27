@@ -6,10 +6,10 @@ import (
 	"errors"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/argon2id"
-	passwordbcrypt "github.com/faustbrian/go-password/bcrypt"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/argon2id"
+	passwordbcrypt "github.com/faustbrian/go-password/v2/bcrypt"
+	"github.com/faustbrian/go-password/v2/passwordtest"
 )
 
 func TestAlgorithmAdaptersAndPHPFixtures(t *testing.T) {
@@ -65,11 +65,5 @@ func TestAdapterValidationAndDeterministicEntropy(t *testing.T) {
 	}
 	if !bytes.Equal(got, []byte{1, 2, 1, 2, 1}) {
 		t.Fatalf("entropy = %v", got)
-	}
-	if _, err := passwordtest.NewService(testArgonPolicy(t), nil); err == nil {
-		t.Fatal("empty seed accepted")
-	}
-	if _, err := passwordtest.NewService(testArgonPolicy(t), []byte{7}); err != nil {
-		t.Fatal(err)
 	}
 }

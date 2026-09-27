@@ -6,12 +6,12 @@ import (
 	"errors"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func TestArgon2idHashVerifyAndUpgrade(t *testing.T) {
 	policy := password.DefaultPolicy()
-	svc, err := password.NewTestService(policy, bytes.NewReader(bytes.Repeat([]byte{0x42}, 64)))
+	svc, err := password.New(policy)
 	if err != nil {
 		t.Fatal(err)
 	}

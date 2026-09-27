@@ -6,8 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func TestSharedPolicyAndAdmissionAreRaceSafe(t *testing.T) {
@@ -18,7 +17,7 @@ func TestSharedPolicyAndAdmissionAreRaceSafe(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	svc, err := passwordtest.NewService(policy, []byte("deterministic synthetic entropy"))
+	svc, err := password.New(policy)
 	if err != nil {
 		t.Fatal(err)
 	}

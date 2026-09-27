@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func TestConstructors(t *testing.T) {

@@ -55,11 +55,18 @@ func WithAdmission(admission *Admission) Option {
 
 // New constructs a production service using crypto/rand.Reader for salts.
 func New(policy Policy, options ...Option) (*Service, error) {
+	return newService(policy, rand.Reader, options...)
+}
+
+func newService(policy Policy, entropy io.Reader, options ...Option) (*Service, error) {
 	if policy.config.Algorithm == "" {
 		return nil, newError(ErrInvalidPolicy, "create service", nil)
 	}
+	if isNilInterface(entropy) {
+		return nil, newError(ErrEntropy, "create service", nil)
+	}
 	admission := newAdmission(policy.config.Limits.Concurrent, policy.config.Limits.Queue)
-	s := &Service{policy: policy, entropy: rand.Reader, admission: admission}
+	s := &Service{policy: policy, entropy: entropy, admission: admission}
 	for _, option := range options {
 		if option == nil {
 			return nil, newError(ErrInvalidPolicy, "configure service", nil)
@@ -71,33 +78,15 @@ func New(policy Policy, options ...Option) (*Service, error) {
 	return s, nil
 }
 
-// NewTestService constructs a service with caller-controlled entropy. It is
-// intended exclusively for deterministic tests and interoperability fixtures;
-// production code must use New.
-func NewTestService(policy Policy, entropy io.Reader, options ...Option) (*Service, error) {
-	if isNilInterface(entropy) {
-		return nil, newError(ErrEntropy, "create test service", nil)
-	}
-	s, err := New(policy, options...)
-	if err != nil {
-		return nil, err
-	}
-	s.entropy = entropy
-	return s, nil
-}
-
 func isNilInterface(value any) bool {
 	if value == nil {
 		return true
 	}
 	reflected := reflect.ValueOf(value)
-	kind := reflected.Kind()
-	switch kind { //nolint:exhaustive // Only nilable concrete kinds require handling.
-	case reflect.Chan, reflect.Func, reflect.Map, reflect.Pointer, reflect.Slice:
+	if kind := reflected.Kind(); kind == reflect.Chan || kind == reflect.Func || kind == reflect.Map || kind == reflect.Pointer || kind == reflect.Slice {
 		return reflected.IsNil()
-	default:
-		return false
 	}
+	return false
 }
 
 // Hash copies the password, obtains admission and entropy, and returns a new

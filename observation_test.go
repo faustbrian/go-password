@@ -3,12 +3,11 @@ package password_test
 import (
 	"context"
 	"errors"
-	"io"
 	"sync"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordtest"
 )
 
 type recordingObserver struct {
@@ -29,7 +28,7 @@ func (o *recordingObserver) snapshot() []password.Observation {
 
 func TestOperationsEmitBoundedSecretSafeObservations(t *testing.T) {
 	observer := &recordingObserver{}
-	svc, err := passwordtest.NewService(testArgonPolicy(t), []byte("synthetic entropy"), password.WithObserver(observer))
+	svc, err := password.New(testArgonPolicy(t), password.WithObserver(observer))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,15 +72,11 @@ func TestObserverConfigurationRejectsNil(t *testing.T) {
 	if _, err := password.New(testArgonPolicy(t), password.WithObserver(observer)); err == nil {
 		t.Fatal("typed-nil observer accepted")
 	}
-	var entropy *zeroReader
-	if _, err := password.NewTestService(testArgonPolicy(t), entropy); !errors.Is(err, password.ErrEntropy) {
-		t.Fatalf("typed-nil entropy error = %v", err)
-	}
 }
 
 func TestObservationOutcomeMatrixAndPanicIsolation(t *testing.T) {
 	observer := &recordingObserver{}
-	svc, err := passwordtest.NewService(testArgonPolicy(t), []byte("synthetic entropy"), password.WithObserver(observer))
+	svc, err := password.New(testArgonPolicy(t), password.WithObserver(observer))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,15 +98,8 @@ func TestObservationOutcomeMatrixAndPanicIsolation(t *testing.T) {
 	if _, err := svc.Hash(context.Background(), make([]byte, 1025)); !errors.Is(err, password.ErrResourceRejected) {
 		t.Fatalf("resource: %v", err)
 	}
-	failing, err := password.NewTestService(testArgonPolicy(t), io.LimitReader(&zeroReader{}, 0), password.WithObserver(observer))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err := failing.Hash(context.Background(), []byte("secret")); !errors.Is(err, password.ErrEntropy) {
-		t.Fatalf("failure: %v", err)
-	}
 	events := observer.snapshot()
-	wants := []password.Outcome{password.OutcomeSuccess, password.OutcomeSuccess, password.OutcomeUnsupported, password.OutcomeCanceled, password.OutcomeResourceRejected, password.OutcomeFailed}
+	wants := []password.Outcome{password.OutcomeSuccess, password.OutcomeSuccess, password.OutcomeUnsupported, password.OutcomeCanceled, password.OutcomeResourceRejected}
 	if len(events) != len(wants) {
 		t.Fatalf("events = %#v", events)
 	}
@@ -129,10 +117,6 @@ func TestObservationOutcomeMatrixAndPanicIsolation(t *testing.T) {
 		t.Fatalf("observer panic changed result: %v", err)
 	}
 }
-
-type zeroReader struct{}
-
-func (*zeroReader) Read([]byte) (int, error) { return 0, nil }
 
 type panicObserver struct{}
 

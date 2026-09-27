@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordservice"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordservice"
 )
 
 func TestLifecycleProvidesServiceCompatibleHooks(t *testing.T) {
-	if got := reflect.TypeFor[passwordservice.Lifecycle]().PkgPath(); got != "github.com/faustbrian/go-password/passwordservice" {
+	if got := reflect.TypeFor[passwordservice.Lifecycle]().PkgPath(); got != "github.com/faustbrian/go-password/v2/passwordservice" {
 		t.Fatalf("Lifecycle package path = %q", got)
 	}
 	a, err := password.NewAdmission(1, 0)

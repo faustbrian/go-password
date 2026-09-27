@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 
-	password "github.com/faustbrian/go-password"
-	passwordauthentication "github.com/faustbrian/go-password/adapters/authentication"
+	password "github.com/faustbrian/go-password/v2"
+	passwordauthentication "github.com/faustbrian/go-password/v2/adapters/authentication"
 )
 
 var (
@@ -40,6 +41,9 @@ func (e *Error) Error() string {
 	return e.kind.Error()
 }
 
+// Format renders only the stable classification for every fmt verb.
+func (e *Error) Format(state fmt.State, _ rune) { _, _ = fmt.Fprint(state, e.Error()) }
+
 // Unwrap exposes classification and cause to errors.Is/errors.As.
 func (e *Error) Unwrap() []error {
 	if e.cause == nil {
@@ -68,6 +72,9 @@ func (Record) Format(state fmt.State, _ rune) {
 	_, _ = fmt.Fprint(state, "password record [redacted]")
 }
 
+// LogValue returns a redacted structured-log value.
+func (Record) LogValue() slog.Value { return slog.StringValue("password record [redacted]") }
+
 // Lookup retrieves an application-owned record without repository ownership.
 type Lookup interface {
 	// LookupPassword returns a record, its presence, and an operational error.
@@ -80,8 +87,24 @@ type Config struct {
 	Passwords *password.Service
 	// Lookup retrieves application-owned records.
 	Lookup Lookup
-	// DummyHash is valid synthetic work used when the username is absent.
+	// DummyHash is synthetic work matching the target algorithm and parameters.
 	DummyHash string
+}
+
+// String returns a redacted diagnostic representation.
+func (Config) String() string { return "password authentication config [redacted]" }
+
+// GoString returns a redacted Go-syntax representation.
+func (Config) GoString() string { return "passwordauth.Config{redacted}" }
+
+// Format redacts every fmt formatting verb.
+func (Config) Format(state fmt.State, _ rune) {
+	_, _ = fmt.Fprint(state, "password authentication config [redacted]")
+}
+
+// LogValue returns a redacted structured-log value.
+func (Config) LogValue() slog.Value {
+	return slog.StringValue("password authentication config [redacted]")
 }
 
 // Authenticator preserves the released adapter type while delegating behavior
@@ -98,7 +121,8 @@ func (adapter lookupAdapter) LookupPassword(ctx context.Context, username string
 	return passwordauthentication.Record{Subject: record.Subject, EncodedHash: record.EncodedHash}, found, err
 }
 
-// New validates all collaborators and parses DummyHash before accepting work.
+// New validates all collaborators and requires DummyHash to match the target
+// algorithm and complete work-factor parameters before accepting work.
 func New(config Config) (*Authenticator, error) {
 	var lookup passwordauthentication.Lookup
 	if !nilLookup(config.Lookup) {

@@ -27,3 +27,9 @@ if find . -type f -name '*.s' -not -path './.git/*' -print -quit | grep -q .; th
 	printf '%s\n' 'custom assembly is forbidden' >&2
 	exit 1
 fi
+
+api_documentation=$(go doc -all .)
+if printf '%s\n' "$api_documentation" | grep -Eq '^func NewTestService\('; then
+	printf '%s\n' 'production API exposes caller-controlled entropy' >&2
+	exit 1
+fi

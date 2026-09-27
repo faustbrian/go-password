@@ -5,14 +5,14 @@
   "modules": [
     {
       "directory": ".",
-      "module_path": "github.com/faustbrian/go-password",
+      "module_path": "github.com/faustbrian/go-password/v2",
       "go_version": "1.27.0",
       "packages": [
         {
           "module_directory": ".",
           "directory": ".",
           "name": "password",
-          "import_path": "github.com/faustbrian/go-password",
+          "import_path": "github.com/faustbrian/go-password/v2",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -24,7 +24,7 @@
           "module_directory": ".",
           "directory": "argon2id",
           "name": "argon2id",
-          "import_path": "github.com/faustbrian/go-password/argon2id",
+          "import_path": "github.com/faustbrian/go-password/v2/argon2id",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -36,7 +36,7 @@
           "module_directory": ".",
           "directory": "bcrypt",
           "name": "bcrypt",
-          "import_path": "github.com/faustbrian/go-password/bcrypt",
+          "import_path": "github.com/faustbrian/go-password/v2/bcrypt",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -48,7 +48,7 @@
           "module_directory": ".",
           "directory": "adapters/authentication",
           "name": "passwordauthentication",
-          "import_path": "github.com/faustbrian/go-password/adapters/authentication",
+          "import_path": "github.com/faustbrian/go-password/v2/adapters/authentication",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -60,7 +60,7 @@
           "module_directory": ".",
           "directory": "adapters/service",
           "name": "passwordservice",
-          "import_path": "github.com/faustbrian/go-password/adapters/service",
+          "import_path": "github.com/faustbrian/go-password/v2/adapters/service",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -72,7 +72,7 @@
           "module_directory": ".",
           "directory": "passwordauth",
           "name": "passwordauth",
-          "import_path": "github.com/faustbrian/go-password/passwordauth",
+          "import_path": "github.com/faustbrian/go-password/v2/passwordauth",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -84,7 +84,7 @@
           "module_directory": ".",
           "directory": "passwordservice",
           "name": "passwordservice",
-          "import_path": "github.com/faustbrian/go-password/passwordservice",
+          "import_path": "github.com/faustbrian/go-password/v2/passwordservice",
           "kind": "public",
           "production": true,
           "executable": true,
@@ -96,7 +96,7 @@
           "module_directory": ".",
           "directory": "passwordtest",
           "name": "passwordtest",
-          "import_path": "github.com/faustbrian/go-password/passwordtest",
+          "import_path": "github.com/faustbrian/go-password/v2/passwordtest",
           "kind": "test support",
           "production": false,
           "executable": true,
@@ -128,17 +128,17 @@
         ],
         "public_package_identifier": "password",
         "primary_entry_packages": [
-          "github.com/faustbrian/go-password"
+          "github.com/faustbrian/go-password/v2"
         ],
         "package_selection": {
-          "github.com/faustbrian/go-password": "Use for bounded password policy, hashing, verification, parsing, admission, redacted errors, and login-time upgrades.",
-          "github.com/faustbrian/go-password/adapters/authentication": "Use at an authentication boundary for explicit record lookup and compare-and-swap hash upgrades.",
-          "github.com/faustbrian/go-password/adapters/service": "Use to bind password admission shutdown to an application service lifecycle.",
-          "github.com/faustbrian/go-password/argon2id": "Use to construct password services with explicit or recommended Argon2id parameters.",
-          "github.com/faustbrian/go-password/bcrypt": "Use to construct bcrypt-compatible password services for migration and interoperability.",
-          "github.com/faustbrian/go-password/passwordauth": "Deprecated compatibility path for the authentication adapter; use adapters/authentication.",
-          "github.com/faustbrian/go-password/passwordservice": "Deprecated compatibility path for the service lifecycle adapter; use adapters/service.",
-          "github.com/faustbrian/go-password/passwordtest": "Use only in tests for deterministic entropy and synthetic password services."
+          "github.com/faustbrian/go-password/v2": "Use for bounded password policy, hashing, verification, parsing, admission, redacted errors, and login-time upgrades.",
+          "github.com/faustbrian/go-password/v2/adapters/authentication": "Use at an authentication boundary for explicit record lookup and compare-and-swap hash upgrades.",
+          "github.com/faustbrian/go-password/v2/adapters/service": "Use to bind password admission shutdown to an application service lifecycle.",
+          "github.com/faustbrian/go-password/v2/argon2id": "Use to construct password services with explicit or recommended Argon2id parameters.",
+          "github.com/faustbrian/go-password/v2/bcrypt": "Use to construct bcrypt-compatible password services for migration and interoperability.",
+          "github.com/faustbrian/go-password/v2/passwordauth": "Deprecated compatibility path for the authentication adapter; use adapters/authentication.",
+          "github.com/faustbrian/go-password/v2/passwordservice": "Deprecated compatibility path for the service lifecycle adapter; use adapters/service.",
+          "github.com/faustbrian/go-password/v2/passwordtest": "Use only in tests for deterministic entropy readers and synthetic compatibility fixtures."
         },
         "lifecycle_status": "active",
         "maturity": "stable",
@@ -163,15 +163,15 @@
         },
         "optional_owned_dependencies": [],
         "adapters": [
-          "github.com/faustbrian/go-password/adapters/authentication",
-          "github.com/faustbrian/go-password/adapters/service",
-          "github.com/faustbrian/go-password/passwordauth",
-          "github.com/faustbrian/go-password/passwordservice"
+          "github.com/faustbrian/go-password/v2/adapters/authentication",
+          "github.com/faustbrian/go-password/v2/adapters/service",
+          "github.com/faustbrian/go-password/v2/passwordauth",
+          "github.com/faustbrian/go-password/v2/passwordservice"
         ],
         "companions": [
-          "github.com/faustbrian/go-password/argon2id",
-          "github.com/faustbrian/go-password/bcrypt",
-          "github.com/faustbrian/go-password/passwordtest"
+          "github.com/faustbrian/go-password/v2/argon2id",
+          "github.com/faustbrian/go-password/v2/bcrypt",
+          "github.com/faustbrian/go-password/v2/passwordtest"
         ],
         "supported_go": {
           "minimum": "1.27.0",
@@ -198,17 +198,17 @@
           "examples": "example_test.go",
           "faq": "docs/faq.md",
           "changelog": "CHANGELOG.md",
-          "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-password",
+          "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-password/v2",
           "ecosystem_index": "https://github.com/faustbrian/go-library-tools/blob/v1.6.1/docs/ecosystem/README.md"
         },
         "known_good_compatibility_sets": [],
         "delivery": {
           "implementation": "not-started",
           "hardening": "not-started",
-          "release": "not-started"
+          "release": "blocked"
         }
       },
-      "version": "1.1.0",
+      "version": "2.0.0",
       "tag_prefix": "v",
       "owned_dependencies": [],
       "reverse_owned_dependencies": [],

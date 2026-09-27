@@ -16,15 +16,20 @@ analysis catches obvious package regressions, but cannot prove side-channel
 immunity. Parsing, malformed input, admission, user lookup, database latency,
 and endpoint responses remain distinguishable.
 
-Applications should use a valid dummy hash for absent users, return uniform
-public authentication failures, rate-limit endpoints, and avoid exposing whether
-a username exists. `adapters/authentication` requires dummy work but cannot equalize caller
-lookup, network, database, or response behavior.
+Applications must generate the absent-user dummy with the active target
+`password.Service` and rotate it whenever that policy changes. The
+authentication adapter rejects a dummy whose algorithm or complete work-factor
+parameters differ from the target. Applications should still return uniform
+public authentication failures, rate-limit endpoints, and avoid exposing
+whether a username exists: the adapter cannot equalize legacy-hash work,
+malformed records, caller lookup, network, database, or response behavior.
 
 Encoded password hashes are not plaintext passwords, but they enable offline
 guessing and are sensitive database material. `EncodedHash.String()` is an
 explicit persistence escape hatch; diagnostic formatting is always redacted.
 
 Observations intentionally omit password, salt, output, encoded hash, username,
-subject, error cause, and attacker-controlled parameters. Keep metric labels to
-the provided bounded enums.
+subject, error cause, and attacker-controlled parameters. Authentication
+records and configuration implement redacted `fmt` and `log/slog` formatting;
+classified errors redact their internal causes for every `fmt` verb. Keep metric
+labels to the provided bounded enums.

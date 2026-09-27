@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordauth"
+	password "github.com/faustbrian/go-password/v2"
+	"github.com/faustbrian/go-password/v2/passwordauth"
 )
 
 type exampleLookup struct{ hash string }
@@ -28,11 +28,11 @@ func ExampleAuthenticator() {
 	if err != nil {
 		panic(err)
 	}
-	dummy, err := bcryptService.Hash(context.Background(), []byte("synthetic dummy password"))
+	passwords, err := password.New(password.DefaultPolicy())
 	if err != nil {
 		panic(err)
 	}
-	passwords, err := password.New(password.DefaultPolicy())
+	dummy, err := passwords.Hash(context.Background(), []byte("synthetic dummy password"))
 	if err != nil {
 		panic(err)
 	}

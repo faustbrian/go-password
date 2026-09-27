@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func TestPolicyAndEncodedHashContracts(t *testing.T) {

@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-password.svg)](https://pkg.go.dev/github.com/faustbrian/go-password)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-password/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-password/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-password?sort=semver)](https://github.com/faustbrian/go-password/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -15,18 +15,26 @@ and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
 endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 
-The module is a stable v1 public library. It requires Go 1.27.0 or newer.
+This source tree defines `github.com/faustbrian/go-password/v2` at v2.0.0
+and requires Go 1.27.0. Eligibility and a changelog date do not establish
+publication; adoption requires the public tag and module artifacts. The
+immutable legacy v1.1.0 module specifies Go 1.26.6.
 
 ## Requirements
 
 - Go 1.27.0 or newer.
-- `golang.org/x/crypto` v0.54.0.
+- `golang.org/x/crypto` v0.57.0.
 
 ## Install
 
+After the public v2.0.0 tag and module artifacts are available:
+
 ```sh
-go get github.com/faustbrian/go-password@v1
+go get github.com/faustbrian/go-password/v2@v2.0.0
 ```
+
+Use the `/v2` imports shown below. Before publication, existing applications
+can retain released v1.1.0 without local replacements or pseudo-versions.
 
 ## Five-minute Argon2id quickstart
 
@@ -38,7 +46,7 @@ import (
 	"errors"
 	"fmt"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func main() {
@@ -72,9 +80,9 @@ func main() {
 ```
 
 `DefaultPolicy` uses Argon2id version 19, time 2, 64 MiB memory, one lane, a
-16-byte salt, and a 32-byte output. On an Apple M4 Max the measured one-shot
-baseline is approximately 66 ms and 64 MiB per hash or verification. Benchmark
-on deployment hardware before setting concurrency or pod limits.
+16-byte salt, and a 32-byte output. Historical measurements do not establish
+performance for the current dependency or deployment hardware. Benchmark the
+deployed toolchain and dependencies before setting concurrency or pod limits.
 
 ## Laravel migration
 
@@ -102,13 +110,15 @@ PostgreSQL examples.
 - Active and queued work have explicit hard limits and drainable lifecycle.
 - Argon2id verification uses constant-time derived-key comparison.
 - Bcrypt verification delegates to the maintained bcrypt primitive.
-- Rehash decisions never downgrade stronger parameters or Argon2id to bcrypt.
+- Rehash decisions never downgrade ordered cost/entropy dimensions or
+  Argon2id to bcrypt; parallelism follows the target deployment's resource
+  shape only when the ordered dimensions are not lowered.
 - Production constructors use `crypto/rand.Reader`; deterministic entropy is
-  visibly test-only.
+  confined to internal tests and the non-production `passwordtest` package.
 - Password slices are copied and not retained. Best-effort clearing of the copy
   is not a guarantee of runtime memory erasure.
-- `EncodedHash.String()` is explicit persistence access; all `fmt` formatting
-  is redacted.
+- `EncodedHash.String()` is explicit persistence access; `fmt` and `log/slog`
+  formatting of secret-bearing authentication values is redacted.
 - Observations contain bounded enums, upgrade state, and duration only.
 
 ## Packages

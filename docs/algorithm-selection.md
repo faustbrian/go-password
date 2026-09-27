@@ -1,6 +1,6 @@
 # Algorithm selection
 
-Use Argon2id for all new hashes. The default is an explicit measured baseline,
+Use Argon2id for all new hashes. The default is an explicit package profile,
 not a timeless recommendation. Re-benchmark periodically and when CPU, memory,
 Go, or `x/crypto` changes.
 
@@ -33,8 +33,10 @@ marks successfully verified bcrypt hashes for upgrade. A bcrypt target never
 marks Argon2id for downgrade, and higher bcrypt costs are preserved.
 
 Argon2id rehash is component-wise monotonic for time, memory, salt length, and
-output length. Parallelism mismatch is treated as a policy change because it
-affects resource shape, but only when no other dimension would be lowered.
+output length. Parallelism is not treated as an ordered security-strength
+dimension: RFC 9106 defines it as the number of lanes, and this module treats a
+mismatch as a target deployment resource-shape change. That replacement is
+recommended only when no ordered cost or entropy dimension would be lowered.
 Incomparable parameter sets are preserved for explicit operator review.
 
 No additional algorithm should be added without a demonstrated migration,

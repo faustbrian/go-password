@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	password "github.com/faustbrian/go-password"
-	serviceadapter "github.com/faustbrian/go-password/adapters/service"
+	password "github.com/faustbrian/go-password/v2"
+	serviceadapter "github.com/faustbrian/go-password/v2/adapters/service"
 )
 
 // ErrInvalidConfig reports a missing admission controller.

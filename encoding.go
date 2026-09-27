@@ -118,11 +118,12 @@ func parseArgon2id(encoded string, limits Limits) (EncodedHash, error) {
 	if outputErr != nil || len(salt) < 8 || len(out) < 16 {
 		return EncodedHash{}, newError(ErrMalformedHash, "parse argon2id", nil)
 	}
-	memory := uint32(m)              //nolint:gosec // ParseUint above is explicitly limited to 32 bits.
-	timeCost := uint32(t)            //nolint:gosec // ParseUint above is explicitly limited to 32 bits.
-	parallelism := uint8(p)          //nolint:gosec // Bounded above by the uint8 policy limit.
-	saltLength := uint32(len(salt))  //nolint:gosec // Decoded length is bounded by the uint32 policy limit.
-	outputLength := uint32(len(out)) //nolint:gosec // Decoded length is bounded by the uint32 policy limit.
+	memory := uint32(m)     // #nosec G115 -- ParseUint above is explicitly limited to 32 bits.
+	timeCost := uint32(t)   // #nosec G115 -- ParseUint above is explicitly limited to 32 bits.
+	parallelism := uint8(p) // #nosec G115 -- parsing and policy limits bound p to eight bits.
+	// Decoded lengths are bounded by uint32 policy limits before allocation.
+	saltLength := uint32(len(salt))  // #nosec G115 -- decoded salt length cannot exceed the uint32 policy limit.
+	outputLength := uint32(len(out)) // #nosec G115 -- decoded output length cannot exceed the uint32 policy limit.
 	return EncodedHash{encoded: encoded, algorithm: Argon2id, argon2id: Argon2idParameters{Version: 19, Time: timeCost, MemoryKiB: memory, Parallelism: parallelism, SaltLength: saltLength, OutputLength: outputLength}, salt: salt, digest: out}, nil
 }
 

@@ -1,4 +1,4 @@
-module github.com/faustbrian/go-password
+module github.com/faustbrian/go-password/v2
 
 go 1.27.0
 

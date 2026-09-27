@@ -5,6 +5,38 @@ versioning after v1.
 
 ## Unreleased
 
+## 2.0.0 - 2026-09-27
+
+This entry identifies the root release source, not proof of publication.
+Adoption requires the public v2 tag and module artifacts.
+
+### Changed
+
+- Require authentication dummy hashes to match the active target algorithm and
+  complete work-factor parameters, preventing stale low-cost dummy work from
+  weakening missing-user timing parity.
+- Remove caller-controlled entropy construction from the production root API.
+  Deterministic entropy remains confined to package-internal tests and the
+  non-production `passwordtest` support package.
+- Treat Argon2id parallelism as deployment resource shape while preserving
+  monotonic time, memory, salt, and output dimensions.
+- Record the clarified verification/redaction and monotonic-upgrade decisions:
+  PASSWORD-DEC-006 sha256:2aa16480aefc694ed42f78109e6347c3fd66105fee868362aef58c087368bf83;
+  PASSWORD-DEC-007 sha256:23b8846b5751879f08ba1702f0fa3625b5d5cbb6e9d9fe46536f4bbb25270d42.
+
+### Security
+
+- Redact authentication records and configurations through `log/slog`, and
+  redact classified error causes through every `fmt` verb.
+- Reconcile the threat model with the exact dummy-work contract and its
+  remaining application-level timing boundaries.
+
+### Removed
+
+- Remove `password.NewTestService` and `passwordtest.NewService`. Tests that
+  only need a service should use `password.New`; deterministic encoded fixtures
+  should use `passwordtest` constants or package-internal test support.
+
 ## 1.1.0 - 2026-09-09
 
 The [specification decision register](docs/specification-decisions.md) records

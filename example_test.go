@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 func ExampleService() {

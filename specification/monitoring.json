@@ -48,7 +48,7 @@
       "kind": "errata",
       "version": "",
       "url": "https://www.openbsd.org/errata78.html",
-      "sha256": "d61cf8abfe3d45592871f0929df366c6cbadf60ca746682b8141527242966672",
+      "sha256": "1b8308b246991e64c18ba59459b147d5271448e9310dbbfaaa18ec1f4215c44e",
       "specifications": ["OpenBSD 7.8 bcrypt password hashing"]
     }
   ]

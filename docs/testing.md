@@ -26,8 +26,8 @@ make mutation
 make docs
 make api
 make check
-make release-artifact VERSION=v1.0.0 REF=HEAD
-make release-check VERSION=v1.0.0 REF=HEAD
+make release-artifact VERSION=v2.0.0 REF=HEAD
+make release-check VERSION=v2.0.0 REF=HEAD
 ```
 
 Fuzz targets cover parser grammar and bounded verification. `FUZZ_TIME` controls
@@ -35,7 +35,7 @@ each campaign; CI uses ten seconds, while longer local/security runs should use
 minutes or hours. Seed corpora include valid PHP hashes, truncation, duplicate
 fields, overflow, invalid base64, unsupported versions, and parameter bombs.
 
-Race tests share immutable policies, deterministic entropy, admission, hashing,
+Race tests share immutable policies, production entropy, admission, hashing,
 verification, queue wakeup, and shutdown across goroutines.
 
 `make kubernetes-bench` verifies its 2-CPU/512 MiB cgroup before measuring all

@@ -3,8 +3,6 @@ package passwordtest
 import (
 	"errors"
 	"sync"
-
-	password "github.com/faustbrian/go-password"
 )
 
 const (
@@ -40,13 +38,4 @@ func (e *Entropy) Read(destination []byte) (int, error) {
 		e.offset++
 	}
 	return len(destination), nil
-}
-
-// NewService constructs a deterministic test-only password service.
-func NewService(policy password.Policy, seed []byte, options ...password.Option) (*password.Service, error) {
-	entropy, err := NewEntropy(seed)
-	if err != nil {
-		return nil, err
-	}
-	return password.NewTestService(policy, entropy, options...)
 }

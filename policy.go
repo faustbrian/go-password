@@ -98,7 +98,7 @@ func argon2idEncodedLength(parameters Argon2idParameters) uint64 {
 
 func rawBase64EncodedLength(bytes uint32) uint64 { return (uint64(bytes)*8 + 5) / 6 }
 
-// DefaultPolicy returns the measured default Argon2id policy: version 19,
+// DefaultPolicy returns the package's default Argon2id policy: version 19,
 // time 2, 64 MiB memory, one lane, 16-byte salt, and 32-byte output.
 func DefaultPolicy() Policy {
 	return Policy{config: PolicyConfig{Algorithm: Argon2id, Argon2id: Argon2idParameters{Version: 19, Time: 2, MemoryKiB: 64 * 1024, Parallelism: 1, SaltLength: 16, OutputLength: 32}, Limits: Limits{PasswordBytes: 1024, EncodedHashBytes: 512, Argon2Time: 4, MemoryKiB: 128 * 1024, Parallelism: 4, SaltBytes: 64, OutputBytes: 64, BcryptCost: 14, Concurrent: 4, Queue: 16}}}

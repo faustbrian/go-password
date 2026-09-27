@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	password "github.com/faustbrian/go-password"
+	password "github.com/faustbrian/go-password/v2"
 )
 
 // ErrInvalidConfig reports a missing admission controller.

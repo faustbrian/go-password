@@ -199,13 +199,13 @@ changelog, conformance, and peer-evidence review.
 | Issue | Primitive specifications define computed outputs but not API error classification, admission ordering, diagnostic redaction, or how Argon2id and bcrypt mismatches share one verifier. |
 | Credible interpretations | Return primitive errors directly<br>Treat every failure as mismatch<br>Parse and admit explicitly, compare through the maintained primitive, and preserve classified failures |
 | Known peer behavior | PHP password_verify returns a boolean for supported hashes, while this package exposes additional classified resource, syntax, version, algorithm, cancellation, and lifecycle failures. |
-| Selected behavior | Parse and resource-check before admission and primitive work, compare Argon2id outputs in constant time, delegate bcrypt comparison to golang.org/x/crypto, return ErrMismatch only for a valid supported hash with a wrong password, and redact hashes and primitive causes from diagnostics. |
-| Normative rationale | Separating mismatch from invalid or rejected input gives callers safe authentication behavior without losing operational classification. |
-| Security consequences | Hostile encodings cannot trigger unbounded primitive work, and secret hashes, passwords, and primitive causes do not enter ordinary diagnostics. |
+| Selected behavior | Parse and resource-check before admission and primitive work, compare Argon2id outputs in constant time, delegate bcrypt comparison to golang.org/x/crypto, return ErrMismatch only for a valid supported hash with a wrong password, require missing-user dummy work to match the complete target profile, and redact hashes and primitive causes from fmt and log/slog diagnostics. |
+| Normative rationale | Separating mismatch from invalid or rejected input gives callers safe authentication behavior without losing operational classification. Exact target dummy work prevents configuration from introducing a cheaper ordinary missing-user primitive path. |
+| Security consequences | Hostile encodings cannot trigger unbounded primitive work, ordinary missing-user verification uses the target work factor, and secret hashes, passwords, and primitive causes do not enter ordinary diagnostics. Lookup, malformed-record, legacy-hash, and endpoint timing remain application concerns. |
 | Resource consequences | Parsing precedes bounded admission; accepted cryptographic work consumes configured active capacity and respects cancellation at owned boundaries. |
 | Compatibility consequences | Callers may distinguish mismatch from malformed, unsupported, resource, cancellation, and lifecycle errors and must not collapse them unintentionally. |
 | Wire consequences | No normalization occurs during verification; accepted encoded hashes retain exact persistence bytes. |
-| Executable evidence | TestServiceFailureAndBoundaryMatrix<br>TestHostileHashesAreRejectedBeforeAdmission<br>TestClassifiedErrorDoesNotExposeCause<br>TestStandardLoggingDoesNotExposeHashOrErrorCause |
+| Executable evidence | TestServiceFailureAndBoundaryMatrix<br>TestHostileHashesAreRejectedBeforeAdmission<br>TestClassifiedErrorDoesNotExposeCause<br>TestStandardLoggingDoesNotExposeHashOrErrorCause<br>TestNewRejectsDummyHashThatDoesNotMatchTargetWork<br>TestRecordAndConfigStructuredLoggingAreRedacted |
 | Official or pinned fixtures | passwordtest/passwordtest.go |
 | Fuzz evidence | FuzzBoundedVerify |
 | Interoperability evidence | None. |
@@ -230,11 +230,11 @@ changelog, conformance, and peer-evidence review.
 | Section | Repository-owned migration policy adjacent to Section 7.4 recommendations |
 | Requirement strength | not specified |
 | Issue | RFC 9106 recommends Argon2id parameters but does not define migration from bcrypt or mixed stronger and weaker persisted Argon2id dimensions. |
-| Credible interpretations | Rehash whenever any parameter differs<br>Compare only a single cost<br>Upgrade bcrypt to Argon2id and require every Argon2id dimension to move monotonically |
+| Credible interpretations | Rehash whenever any parameter differs<br>Compare only a single cost<br>Upgrade bcrypt to Argon2id, keep cost and entropy dimensions monotonic, and treat parallelism as deployment resource shape |
 | Known peer behavior | PHP password_needs_rehash compares against requested algorithm options, but application policy still owns cross-algorithm migration and durable replacement. |
-| Selected behavior | Mark verified bcrypt for upgrade when the target is Argon2id, never mark Argon2id for downgrade to bcrypt, preserve higher bcrypt cost, and recommend an Argon2id rehash only when at least one target dimension is higher and no target dimension is lower. |
-| Normative rationale | A partial stronger profile must not be replaced by a mixed profile that lowers another security or entropy dimension. |
-| Security consequences | Login-time migration cannot silently lower memory, time, lanes, salt length, output length, algorithm, or higher bcrypt cost. |
+| Selected behavior | Mark verified bcrypt for upgrade when the target is Argon2id, never mark Argon2id for downgrade to bcrypt, preserve higher bcrypt cost, keep time, memory, salt length, and output length monotonic, and rehash a parallelism mismatch as a deployment resource-shape change only when those ordered dimensions are not lowered. |
+| Normative rationale | A partial stronger profile must not be replaced by a mixed profile that lowers an ordered cost or entropy dimension. RFC 9106 defines parallelism as lanes used by the computation, so the target deployment owns its resource shape rather than assuming a universally stronger lane count. |
+| Security consequences | Login-time migration cannot silently lower memory, time, salt length, output length, algorithm, or higher bcrypt cost; lane count can move to the target resource shape only under that guard. |
 | Resource consequences | Upgrade hashing occurs only after successful verification and remains subject to the target policy and admission limits. |
 | Compatibility consequences | Existing valid hashes continue to verify; callers receive an explicit upgrade recommendation and control durable compare-and-swap replacement. |
 | Wire consequences | Successful upgrades produce a new canonical target hash while failed or concurrent replacement leaves the old hash usable. |

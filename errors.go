@@ -53,6 +53,9 @@ func (e *Error) Cause() error { return e.cause }
 // Error returns a stable classification without formatting Cause.
 func (e *Error) Error() string { return fmt.Sprintf("password: %s: %v", e.operation, e.kind) }
 
+// Format renders only the stable classification for every fmt verb.
+func (e *Error) Format(state fmt.State, _ rune) { _, _ = fmt.Fprint(state, e.Error()) }
+
 // Unwrap exposes both classification and cause to errors.Is/errors.As.
 func (e *Error) Unwrap() []error {
 	if e.cause == nil {

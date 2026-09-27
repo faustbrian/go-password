@@ -5,6 +5,12 @@ records which behavior comes from RFC 9106, RFC 4648, OpenBSD bcrypt, or
 package policy. Source and change authorities are pinned separately in
 `monitoring.json`.
 
+On 2026-09-27 the OpenBSD 7.8 errata page was reviewed through entry 057.
+Entries 051–057 dated 2026-09-14 address smtpd, NFS, wscons, shmat, libexpat,
+the X server and ldapd, not bcrypt semantics. The version-pinned bcrypt(3)
+manual still matches its recorded checksum; no password-format decision or
+conformance fixture changed. Only the rolling errata-page pin was refreshed.
+
 | Decision | Observable boundary | Peer boundary |
 | --- | --- | --- |
 | PASSWORD-DEC-001 | Argon2id version 1.3 primitive profile | Argon2 reference vector and live PHP agreement |

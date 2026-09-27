@@ -8,8 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	password "github.com/faustbrian/go-password"
-	"github.com/faustbrian/go-password/passwordtest"
+	password "github.com/faustbrian/go-password/v2"
+	passwordauthentication "github.com/faustbrian/go-password/v2/adapters/authentication"
+	"github.com/faustbrian/go-password/v2/passwordtest"
 )
 
 func TestStandardLoggingDoesNotExposeHashOrErrorCause(t *testing.T) {
@@ -17,11 +18,25 @@ func TestStandardLoggingDoesNotExposeHashOrErrorCause(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	service, err := password.NewTestService(password.DefaultPolicy(), errorReader{err: errors.New("sensitive entropy detail")})
+	service, err := password.New(password.DefaultPolicy())
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, classified := service.Hash(context.Background(), []byte("synthetic"))
+	dummy, err := service.Hash(context.Background(), []byte("synthetic dummy password"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	authenticator, err := passwordauthentication.New(passwordauthentication.Config{
+		Passwords: service,
+		Lookup: lookupErrorFunc(func(context.Context, string) (passwordauthentication.Record, bool, error) {
+			return passwordauthentication.Record{}, false, errors.New("sensitive lookup detail")
+		}),
+		DummyHash: dummy.String(),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, classified := authenticator.Authenticate(context.Background(), "synthetic", []byte("synthetic"))
 	for _, handler := range []func(*bytes.Buffer) slog.Handler{
 		func(buffer *bytes.Buffer) slog.Handler { return slog.NewJSONHandler(buffer, nil) },
 		func(buffer *bytes.Buffer) slog.Handler { return slog.NewTextHandler(buffer, nil) },
@@ -29,10 +44,16 @@ func TestStandardLoggingDoesNotExposeHashOrErrorCause(t *testing.T) {
 		var output bytes.Buffer
 		slog.New(handler(&output)).Info("password operation", "hash", hash, "error", classified)
 		rendered := output.String()
-		if strings.Contains(rendered, hash.String()) || strings.Contains(rendered, "sensitive entropy detail") {
+		if strings.Contains(rendered, hash.String()) || strings.Contains(rendered, "sensitive lookup detail") {
 			t.Fatalf("structured log exposed sensitive value: %s", rendered)
 		}
 	}
+}
+
+type lookupErrorFunc func(context.Context, string) (passwordauthentication.Record, bool, error)
+
+func (function lookupErrorFunc) LookupPassword(ctx context.Context, username string) (passwordauthentication.Record, bool, error) {
+	return function(ctx, username)
 }
 
 func TestHostileHashesAreRejectedBeforePrimitive(t *testing.T) {
