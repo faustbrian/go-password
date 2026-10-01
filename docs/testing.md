@@ -26,8 +26,8 @@ make mutation
 make docs
 make api
 make check
-make release-artifact VERSION=v2.0.0 REF=HEAD
-make release-check VERSION=v2.0.0 REF=HEAD
+make release-artifact VERSION=v2.0.1 REF=HEAD
+make release-check VERSION=v2.0.1 REF=HEAD
 ```
 
 Fuzz targets cover parser grammar and bounded verification. `FUZZ_TIME` controls

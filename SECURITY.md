@@ -11,7 +11,7 @@ require migration. The `main` branch is not a supported deployment target.
 
 | Version | Supported |
 | --- | --- |
-| v2.0.0 | Supported after public tag and module publication |
+| v2.0.x | Supported; each version requires public tag and module publication |
 | Legacy v1 releases | Reports accepted; fixes may require migration |
 | `main` | No |
 
