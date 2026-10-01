@@ -5,6 +5,13 @@ versioning after v1.
 
 ## Unreleased
 
+## 2.0.1 - 2026-10-02
+
+### Changed
+
+- Adopt the pinned `go-library-tools` v1.8.5 reusable verification workflow
+  while retaining the independently pinned v1.6.1 CLI.
+
 ## 2.0.0 - 2026-09-27
 
 This entry identifies the root release source, not proof of publication.

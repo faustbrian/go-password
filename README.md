@@ -15,7 +15,7 @@ and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
 endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 
-This source tree defines `github.com/faustbrian/go-password/v2` at v2.0.0
+This source tree defines `github.com/faustbrian/go-password/v2` at v2.0.1
 and requires Go 1.27.0. Eligibility and a changelog date do not establish
 publication; adoption requires the public tag and module artifacts. The
 immutable legacy v1.1.0 module specifies Go 1.26.6.
@@ -27,14 +27,15 @@ immutable legacy v1.1.0 module specifies Go 1.26.6.
 
 ## Install
 
-After the public v2.0.0 tag and module artifacts are available:
+After the public v2.0.1 tag and module artifacts are available:
 
 ```sh
-go get github.com/faustbrian/go-password/v2@v2.0.0
+go get github.com/faustbrian/go-password/v2@v2.0.1
 ```
 
-Use the `/v2` imports shown below. Before publication, existing applications
-can retain released v1.1.0 without local replacements or pseudo-versions.
+Use the `/v2` imports shown below. Existing v2 applications can retain
+released v2.0.0 until the patch is published; legacy applications can retain
+v1.1.0 without local replacements or pseudo-versions.
 
 ## Five-minute Argon2id quickstart
 
