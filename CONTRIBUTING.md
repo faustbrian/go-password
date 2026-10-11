@@ -26,10 +26,10 @@ complete the Specification Decisions section of the pull request template. An
 unresolved interpretation or stale source pin is release-blocking; peer
 behavior cannot silently select policy.
 
-Full scheduled and release mutation gates must finish with zero surviving viable
+Explicit full and release mutation gates must finish with zero surviving viable
 mutants. Local mutation is optional, not a universal contribution prerequisite.
 
-Do not add package-local workflows, permanent replacements, machine-specific
+Do not fork shared verification workflows, add permanent replacements, machine-specific
 paths, bypass flags, broad mutation exclusions, or aggregate quality metrics
 that hide a failing package.
 
@@ -84,6 +84,30 @@ targets. Parser, primitive, lifecycle and upgrade changes still need their
 affected refusal, cancellation, admission, CAS and compatibility assertions.
 Release rehearsal remains `golib release dry-run --module .`. Report skipped,
 unavailable and failed boundaries; local checks are not hosted-CI or release proof.
+
+## Selected Weekly Assurance
+
+The owner-level [selected-assurance caller](.github/workflows/assurance.yml) is
+configured for main only, on Fridays at 03:41 UTC. It selects one of the
+2 current declared root-module fuzz targets using the shared UTC-week
+rotation, with 30 seconds of active exploration. The selected risks are:
+encoded-hash round trips and algorithm identity, plus verification under
+small explicit resource limits with classified refusal outcomes.
+These in-process parser/verification targets do not certify cryptographic
+primitives, zeroization, admission concurrency or resource-tagged stress.
+Existing source/conformance guards, named races, Go/PHP interoperability,
+portability and separately selected container benchmarks remain unchanged.
+
+Base-free ordinary checks execute deterministic seeds, not active exploration;
+committed-range CI selects affected active smoke. Manual assurance requires an
+exact anchored selector from the root fuzz operation in `.golib.yaml`, for
+example `^FuzzParseEncodedHash$`.
+Empty, unknown and malformed selections refuse. The shared job bounds setup
+and execution to ten minutes, active workers and CPU to two, owned memory to
+2 GiB, native output to 1 MiB and private-cache lifetime. Failure, cancellation,
+exhausted budgets and cleanup refusal remain attributable failures. This lane
+does not run mutation or replace Required, original full fuzz budgets,
+explicit `make check-full`, or relevant release qualification.
 
 ## Adding A Module
 
