@@ -13,16 +13,17 @@ Recorded locally on 2026-07-16 with Go 1.26.5, darwin/arm64, Apple M4 Max,
 | Bcrypt cost 10 verify | 50.9 ms | 7,840 |
 
 This is a reproducible development baseline, not a promise for Kubernetes
-nodes. Run `make bench` on the exact CPU architecture and limits used in each
+nodes. Run `go test -run '^$' -bench '^BenchmarkApproved' -benchmem -benchtime=1x ./...`
+on the exact CPU architecture and limits used in each
 deployment.
 
-`make kubernetes-bench` supplies the reproducible representative baseline: a
+`make -f verification/package.mk kubernetes-bench` supplies the reproducible representative baseline: a
 pinned Linux Go image under enforced 2-CPU, 512 MiB, no-swap cgroup limits. Its
 measured results and exact environment are recorded in
 [performance baseline](performance.md). Run it again on the deployment node
 architecture, then load-test inside the actual pod limits before rollout.
 
-`make resource` also runs eight callers under the race detector against two
+`make -f verification/package.mk resource` also runs eight callers under the race detector against two
 default-policy admission slots. It asserts that expensive work reaches both
 slots but never exceeds their combined 128 MiB Argon2 memory budget.
 

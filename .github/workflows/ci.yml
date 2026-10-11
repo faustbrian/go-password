@@ -20,21 +20,73 @@ permissions:
 
 jobs:
   ci:
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@244be9015065df70ff84667beb644878a859c819 # reviewed security maintenance source
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@eff8b2127c361ee2f422123824a1d337cc277ac4 # v2.1.1 qualified public verifier
     with:
-      tooling_sha: 244be9015065df70ff84667beb644878a859c819
-      source_bootstrap: true
+      tooling_sha: eff8b2127c361ee2f422123824a1d337cc277ac4
+      source_bootstrap: false
       public_dependencies: true
       release_dry_run: ${{ inputs.release_dry_run || false }}
+
+  source-boundaries:
+    name: Password source and specification boundaries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      GOWORK: 'off'
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '2'
+      GOFLAGS: -p=1
+    steps:
+      - name: Check out exact producer
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.2'
+          cache: false
+      - name: Initialize task-owned caches
+        run: |
+          set -euo pipefail
+          boundary_task="$(mktemp -d "${RUNNER_TEMP}/password-boundaries.XXXXXX")"
+          printf 'TASK_ROOT=%s\nGOCACHE=%s\nGOMODCACHE=%s\nGOTMPDIR=%s\nTMPDIR=%s\n' \
+            "${boundary_task}" "${boundary_task}/build" "${boundary_task}/modules" \
+            "${boundary_task}/tmp" "${boundary_task}/tmp" >>"${GITHUB_ENV}"
+          mkdir -p "${boundary_task}/build" "${boundary_task}/modules" "${boundary_task}/tmp"
+      - name: Check source boundaries and local conformance authority
+        run: |
+          set -euo pipefail
+          sh verification/check-boundaries.sh
+          bash verification/check-conformance.sh --local
+      - name: Remove task-owned boundary resources
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ -z "${TASK_ROOT:-}" ]]; then
+            exit 0
+          fi
+          case "${TASK_ROOT}" in
+            "${RUNNER_TEMP}"/password-boundaries.*) ;;
+            *) echo 'unexpected password boundary workspace' >&2; exit 1 ;;
+          esac
+          if [[ -d "${TASK_ROOT}" ]]; then
+            find "${TASK_ROOT}" -type d -exec chmod u+w {} +
+            find "${TASK_ROOT}" -depth -delete
+          fi
+          test ! -e "${TASK_ROOT}"
 
   required:
     name: Required
     if: always()
-    needs: ci
+    needs: [ci, source-boundaries]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Require shared workflow
+      - name: Require shared workflow and password boundaries
         env:
           CI_RESULT: ${{ needs.ci.result }}
-        run: test "${CI_RESULT}" = success
+          BOUNDARIES_RESULT: ${{ needs.source-boundaries.result }}
+        run: test "${CI_RESULT}" = success && test "${BOUNDARIES_RESULT}" = success

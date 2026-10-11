@@ -39,7 +39,7 @@ password_hash('synthetic password', PASSWORD_ARGON2ID, [
 ]);
 ```
 
-`make interoperability` independently verifies both committed PHP outputs in
+`make -f verification/package.mk interoperability` independently verifies both committed PHP outputs in
 Go and again with PHP's `password_verify`. It also creates fresh random PHP
 Argon2id and bcrypt outputs and verifies them in Go, then creates fresh Go
 outputs and verifies them in PHP. This live bidirectional gate tests the shared

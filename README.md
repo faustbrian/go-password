@@ -3,7 +3,7 @@
 [![CI](https://github.com/faustbrian/go-password/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-password/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-password/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
-[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-local%20%2F%20scheduled-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-password/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-password/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-password?sort=semver)](https://github.com/faustbrian/go-password/releases)
@@ -152,8 +152,14 @@ PostgreSQL examples.
 - [Support](SUPPORT.md) and [security policy](SECURITY.md)
 
 For ecosystem-wide package selection, construction, ownership, and lifecycle
-guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.1/docs/ecosystem/README.md)
-and its [Service edge family](https://github.com/faustbrian/go-library-tools/blob/v1.6.1/docs/ecosystem/design-language.md#package-families-and-selection).
+guidance, see the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v2.1.1/docs/ecosystem/README.md)
+and its [Service edge family](https://github.com/faustbrian/go-library-tools/blob/v2.1.1/docs/ecosystem/design-language.md#package-families-and-selection).
+
+Start development with standalone `GOWORK=off go test ./...`. `make check` and
+`make ci` retain owned source/conformance guards and bounded public-verifier
+checks, including the focused admission race. `make check-full` retains full
+qualification. See [contributor guidance](CONTRIBUTING.md#verification) for
+seed-versus-active fuzzing, optional local mutation and PHP/resource boundaries.
 
 ## License
 

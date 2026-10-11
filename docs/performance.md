@@ -24,7 +24,7 @@ container-constrained measurements described in
 
 ## Representative Kubernetes budget
 
-`make kubernetes-bench` runs the same approved benchmarks in pinned Go Linux
+`make -f verification/package.mk kubernetes-bench` runs the same approved benchmarks in pinned Go Linux
 with cgroup limits of 2 CPUs, 512 MiB memory, no swap, and `GOMAXPROCS=2`. The
 gate verifies the cgroup files before running. On 2026-07-17, Docker 29.6.1 on
 Apple M4 Max produced this `linux/arm64` one-shot baseline:
@@ -36,9 +36,10 @@ Apple M4 Max produced this `linux/arm64` one-shot baseline:
 | `BenchmarkApprovedBcrypt/hash` | 65,199,458 | 5,816 | 19 |
 | `BenchmarkApprovedBcrypt/verify` | 79,704,083 | 5,832 | 20 |
 
-The CI run repeats the cgroup-constrained check on `linux/amd64`; these numbers
-are capacity evidence for the stated representative limit, not a cross-node
-latency promise.
+Explicit cgroup qualification must run on the deployment's Linux architecture;
+these recorded numbers are capacity evidence for the stated representative
+limit, not a cross-node latency promise. Ordinary CI does not select this
+Docker-backed performance campaign.
 
 The timing smoke suite interleaves Argon2id and bcrypt match/mismatch samples,
 compares p10, p50, and p90, and fails only on an obvious fivefold regression.

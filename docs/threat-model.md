@@ -54,7 +54,8 @@ Go does not expose a recoverable general-purpose allocation failure. A process
 may terminate if its trusted policy and container limit are incompatible. The
 package therefore validates generated lengths, rejects attacker-selected work
 before primitive allocation, and bounds simultaneous default-policy work; it
-does not claim to catch runtime out-of-memory termination. `make resource`
+does not claim to catch runtime out-of-memory termination.
+`make -f verification/package.mk resource`
 exercises that boundary with two 64 MiB slots and eight concurrent callers.
 
 The authentication adapter requires its missing-user dummy to match the active
