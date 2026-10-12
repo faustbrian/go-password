@@ -28,6 +28,9 @@ before primitive work, even when the general password-input ceiling is higher.
 | `NeedsRehash` | Boolean | None |
 | `VerifyAndUpgrade` | Result plus existing/new hash | Verify, then hash only if needed |
 
+A match needing no upgrade returns the parsed original hash, not an empty
+replacement. Verification and replacement hashing acquire admission separately.
+
 On upgrade hashing failure, `VerifyAndUpgrade` returns the successful
 verification result, an empty replacement, and the failure. The existing hash
 is untouched because the package never owns persistence.
@@ -58,7 +61,10 @@ upgrade state. Malformed and unsupported hashes never reach a primitive.
 
 Context cancellation is checked before parsing/work and while waiting for
 admission. The maintained Argon2id and bcrypt functions do not accept contexts;
-once invoked they run to completion. Do not promise immediate cancellation.
+once invoked they run to completion. Salt reads are not context-interruptible
+either. There is no cancellation recheck after admission or after computation;
+a canceled context can therefore accompany a successful returned result.
+Do not promise immediate cancellation.
 Bound parameter costs and concurrency so this limitation is operationally safe.
 
 ## Encoded hashes

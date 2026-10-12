@@ -5,7 +5,9 @@ use. Test entropy is mutex-protected; custom observers must be concurrency-safe.
 
 `Limits.Concurrent` bounds primitive executions. `Limits.Queue` bounds waiting
 callers. A full queue returns `ErrAdmission` immediately. Waiting honors context
-cancellation. No worker goroutines or background rehash jobs are created.
+cancellation, though a racing capacity notification can still admit work. FIFO
+fairness is not promised. Admission creates no workers or background rehash
+jobs; the maintained Argon2id primitive can use joined internal lane workers.
 
 `Admission.Shutdown` atomically rejects new work, wakes waiters with `ErrClosed`,
 and waits for active operations to release capacity. A deadline may expire while

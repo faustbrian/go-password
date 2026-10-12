@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-// Operation is a bounded observation operation name.
+// Operation names an observation operation. Service emits only the constants
+// below; arbitrary application conversions to this string type are not validated.
 type Operation string
 
 const (
@@ -18,7 +19,8 @@ const (
 	OperationVerifyAndUpgrade Operation = "verify_and_upgrade"
 )
 
-// Outcome is a bounded, secret-free observation result.
+// Outcome names an observation result. Service emits the constants below,
+// without copying primitive errors or attacker-controlled input into labels.
 type Outcome string
 
 const (
@@ -40,28 +42,36 @@ const (
 	OutcomeFailed Outcome = "failed"
 )
 
-// Observation contains only bounded fields safe for logs, metrics, and traces.
+// Observation is a service event without password, hash, subject, or error data.
+// Service supplies bounded labels; application-constructed values are not checked.
 type Observation struct {
 	// Operation identifies the public API call.
 	Operation Operation
-	// Algorithm is the configured target algorithm, never attacker-controlled.
+	// Algorithm is the configured target in Service events, not the stored hash
+	// algorithm or attacker-controlled parsed parameters.
 	Algorithm Algorithm
 	// Outcome is the classified bounded result.
 	Outcome Outcome
 	// NeedsRehash reports the verified hash's upgrade decision.
 	NeedsRehash bool
-	// Duration is total synchronous call latency.
+	// Duration covers the operation through result computation, including waits
+	// and both upgrade phases, but excludes the observer callback itself.
 	Duration time.Duration
 }
 
-// Observer consumes synchronous secret-safe operation observations. It must
-// bound its own work; panics are isolated from password operation results.
+// Observer consumes one synchronous event per public Hash, Verify, or
+// VerifyAndUpgrade call. Calls may overlap or reenter; implementations must be
+// concurrency-safe and bound their own latency. Panics are isolated, but blocking
+// delays return. The borrowed context may contain application secrets: event
+// redaction does not make context values safe to log.
 type Observer interface {
-	// Observe records one bounded event.
+	// Observe records a service event using the caller context. An upgrade emits
+	// one combined event, not separate nested hash and verify callbacks.
 	Observe(context.Context, Observation)
 }
 
-// WithObserver configures one caller-owned Observer.
+// WithObserver configures one borrowed caller-owned Observer; nil and typed-nil
+// values are rejected. The service does not queue events or close the observer.
 func WithObserver(observer Observer) Option {
 	return func(service *Service) error {
 		if isNilInterface(observer) {

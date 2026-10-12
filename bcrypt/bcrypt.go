@@ -4,6 +4,9 @@ import password "github.com/faustbrian/go-password/v2"
 
 // New validates cost and limits and constructs a bcrypt-target service. New
 // systems should use Argon2id; bcrypt targets exist for controlled compatibility.
+// Verification can accept bounded Argon2id hashes but does not recommend replacing
+// them with bcrypt. Bcrypt hashing/verification limits passwords to 72 bytes,
+// without silent truncation.
 func New(cost int, limits password.Limits, options ...password.Option) (*password.Service, error) {
 	policy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Bcrypt, BcryptCost: cost, Limits: limits})
 	if err != nil {

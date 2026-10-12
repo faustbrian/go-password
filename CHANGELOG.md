@@ -5,6 +5,14 @@ versioning after v1.
 
 ## Unreleased
 
+### Documentation
+
+- Clarify borrowed password lifetime, admission/cancellation boundaries,
+  original-hash and partial-result upgrade returns, observer duration/privacy,
+  and the distinction between generation targets and verification support.
+- Document caller-owned shutdown/CAS and the limits of diagnostic redaction
+  without changing algorithms, encoded formats, or runtime behavior.
+
 ## 2.0.1 - 2026-10-02
 
 ### Changed

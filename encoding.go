@@ -10,8 +10,10 @@ import (
 
 var bcryptBase64 = base64.NewEncoding("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789").WithPadding(base64.NoPadding)
 
-// EncodedHash is a validated persistence value. String explicitly returns the
-// encoded hash; all fmt-based diagnostic formatting is redacted.
+// EncodedHash holds a canonical encoding and parsed metadata, not proof that a
+// password matches. Decoded bytes remain private and copies expose no mutable
+// buffers. Its zero value is empty, not a valid stored hash. String explicitly
+// returns sensitive persistence bytes; fmt redaction is not general serialization.
 type EncodedHash struct {
 	encoded    string
 	algorithm  Algorithm
@@ -40,7 +42,12 @@ func (h EncodedHash) Argon2idParameters() Argon2idParameters { return h.argon2id
 func (h EncodedHash) BcryptCost() int { return h.bcryptCost }
 
 // ParseEncodedHash validates canonical syntax and resource fields before any
-// password primitive is invoked.
+// password primitive is invoked. It preserves exact accepted encoding bytes
+// without normalization and performs no password verification. Limits is used
+// directly, not validated as a complete Policy; use validated Policy.Limits for
+// service-compatible ceilings, especially bcrypt costs no greater than 31.
+// Empty/invalid syntax is ErrMalformedHash, excessive fields ErrResourceRejected,
+// and unsupported algorithms/versions have distinct classifications.
 func ParseEncodedHash(encoded string, limits Limits) (EncodedHash, error) {
 	if len(encoded) == 0 {
 		return EncodedHash{}, newError(ErrMalformedHash, "parse hash", nil)
@@ -121,7 +128,8 @@ func parseArgon2id(encoded string, limits Limits) (EncodedHash, error) {
 	memory := uint32(m)     // #nosec G115 -- ParseUint above is explicitly limited to 32 bits.
 	timeCost := uint32(t)   // #nosec G115 -- ParseUint above is explicitly limited to 32 bits.
 	parallelism := uint8(p) // #nosec G115 -- parsing and policy limits bound p to eight bits.
-	// Decoded lengths are bounded by uint32 policy limits before allocation.
+	// Reject encoded field lengths before decoding allocates attacker-sized buffers.
+	// Widened length arithmetic preserves the full uint32 ceiling without overflow.
 	saltLength := uint32(len(salt))  // #nosec G115 -- decoded salt length cannot exceed the uint32 policy limit.
 	outputLength := uint32(len(out)) // #nosec G115 -- decoded output length cannot exceed the uint32 policy limit.
 	return EncodedHash{encoded: encoded, algorithm: Argon2id, argon2id: Argon2idParameters{Version: 19, Time: timeCost, MemoryKiB: memory, Parallelism: parallelism, SaltLength: saltLength, OutputLength: outputLength}, salt: salt, digest: out}, nil

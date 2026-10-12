@@ -50,7 +50,8 @@ func (e *Error) Unwrap() []error {
 }
 
 // Record is an application-owned subject and encoded password hash. Diagnostic
-// formatting is redacted; EncodedHash is accessed explicitly for verification.
+// formatting is redacted; direct fields and generic serializers remain sensitive.
+// EncodedHash is accessed explicitly for verification.
 type Record struct {
 	// Subject is the stable application identity.
 	Subject string
@@ -73,12 +74,18 @@ func (Record) Format(state fmt.State, _ rune) {
 func (Record) LogValue() slog.Value { return slog.StringValue("password record [redacted]") }
 
 // Lookup retrieves an application-owned record without repository ownership.
+// Implementations own concurrency, lookup cancellation, and record privacy;
+// usernames are passed through unchanged and without a package length limit.
 type Lookup interface {
 	// LookupPassword returns a record, its presence, and an operational error.
+	// An absent record is ignored; a present record needs a nonempty subject
+	// and encoding. An operational error takes precedence over record data.
 	LookupPassword(context.Context, string) (Record, bool, error)
 }
 
-// Config contains all mandatory authentication adapter collaborators.
+// Config contains all mandatory authentication adapter collaborators. Passwords
+// and Lookup are borrowed; fmt/slog redaction does not protect direct field access
+// or generic serialization of DummyHash.
 type Config struct {
 	// Passwords performs bounded verification and upgrades.
 	Passwords *password.Service
@@ -105,6 +112,8 @@ func (Config) LogValue() slog.Value {
 }
 
 // Authenticator verifies lookup records and returns explicit CAS upgrade data.
+// Construct it with New; its zero value is not usable. Concurrent calls require
+// concurrency-safe Lookup and Service collaborators.
 type Authenticator struct {
 	passwords *password.Service
 	lookup    Lookup
@@ -113,6 +122,8 @@ type Authenticator struct {
 
 // New validates all collaborators and requires DummyHash to match the target
 // algorithm and complete work-factor parameters before accepting work.
+// Exact dummy work does not equalize lookup, malformed-record, legacy-hash,
+// upgrade, cancellation, or endpoint timing. Collaborators are not closed.
 func New(config Config) (*Authenticator, error) {
 	if config.Passwords == nil || nilLookup(config.Lookup) || config.DummyHash == "" {
 		return nil, newError(ErrInvalidConfig, nil)
@@ -192,6 +203,11 @@ func (Result) GoString() string { return "passwordauthentication.Result{redacted
 
 // Authenticate performs lookup, dummy work for absence, verification, and an
 // in-memory replacement hash. It never writes persistence or constructs users.
+// ctx must be non-nil and secret must stay stable until return. Missing identities
+// are rejected even if the dummy password matches. A replacement-generation
+// failure returns no authenticated Result, even after a match: cancellation is
+// ErrCanceled and other operational failures are ErrUnavailable.
+// Successful upgrades require caller-owned CAS against Upgrade.Expected.
 func (a *Authenticator) Authenticate(ctx context.Context, username string, secret []byte) (Result, error) {
 	if err := ctx.Err(); err != nil {
 		return Result{}, newError(ErrCanceled, err)

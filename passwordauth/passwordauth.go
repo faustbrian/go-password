@@ -53,7 +53,8 @@ func (e *Error) Unwrap() []error {
 }
 
 // Record is an application-owned subject and encoded password hash. Diagnostic
-// formatting is redacted; EncodedHash is accessed explicitly for verification.
+// formatting is redacted; direct fields and generic serializers remain sensitive.
+// EncodedHash is accessed explicitly for verification.
 type Record struct {
 	// Subject is the stable application identity.
 	Subject string
@@ -76,12 +77,18 @@ func (Record) Format(state fmt.State, _ rune) {
 func (Record) LogValue() slog.Value { return slog.StringValue("password record [redacted]") }
 
 // Lookup retrieves an application-owned record without repository ownership.
+// Implementations own concurrency, lookup cancellation, and record privacy;
+// usernames are passed through unchanged and without a package length limit.
 type Lookup interface {
 	// LookupPassword returns a record, its presence, and an operational error.
+	// An absent record is ignored; a present record needs a nonempty subject
+	// and encoding. An operational error takes precedence over record data.
 	LookupPassword(context.Context, string) (Record, bool, error)
 }
 
-// Config contains all mandatory authentication adapter collaborators.
+// Config contains all mandatory authentication adapter collaborators. Passwords
+// and Lookup are borrowed; fmt/slog redaction does not protect direct field access
+// or generic serialization of DummyHash.
 type Config struct {
 	// Passwords performs bounded verification and upgrades.
 	Passwords *password.Service
@@ -123,6 +130,8 @@ func (adapter lookupAdapter) LookupPassword(ctx context.Context, username string
 
 // New validates all collaborators and requires DummyHash to match the target
 // algorithm and complete work-factor parameters before accepting work.
+// Exact dummy work does not equalize lookup, malformed-record, legacy-hash,
+// upgrade, cancellation, or endpoint timing. Collaborators are not closed.
 func New(config Config) (*Authenticator, error) {
 	var lookup passwordauthentication.Lookup
 	if !nilLookup(config.Lookup) {
@@ -211,7 +220,9 @@ func (Result) String() string { return "password authentication result" }
 func (Result) GoString() string { return "passwordauth.Result{redacted}" }
 
 // Authenticate delegates to the target-oriented successor while preserving
-// the released result and error types.
+// the released result and error types. These are distinct types and sentinels,
+// not aliases of the successor. Lookup/privacy, stable secret bytes, non-nil
+// context, and caller-owned CAS requirements are the successor contracts.
 func (a *Authenticator) Authenticate(ctx context.Context, username string, secret []byte) (Result, error) {
 	result, err := a.adapter.Authenticate(ctx, username, secret)
 	if err != nil {

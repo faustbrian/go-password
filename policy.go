@@ -14,7 +14,8 @@ const (
 	Bcrypt Algorithm = "bcrypt"
 )
 
-// Argon2idParameters is an immutable Argon2id work and output specification.
+// Argon2idParameters describes Argon2id work and output sizes. NewPolicy copies
+// the fields; mutating this configuration value does not change an existing policy.
 type Argon2idParameters struct {
 	// Version is the Argon2 version; only 19 is supported.
 	Version uint32
@@ -31,7 +32,8 @@ type Argon2idParameters struct {
 }
 
 // Limits bounds caller input, encoded fields, primitive resources, and
-// concurrent work. Values are copied into Policy.
+// concurrent work. Values are copied into Policy. These are caller-selected
+// ceilings, not a guarantee that the host can sustain the resulting work.
 type Limits struct {
 	// PasswordBytes is the maximum password length accepted by operations.
 	PasswordBytes int
@@ -67,10 +69,15 @@ type PolicyConfig struct {
 	Limits Limits
 }
 
-// Policy is a validated immutable hashing and verification policy.
+// Policy is a validated immutable hashing and verification policy. Its zero
+// value cannot construct a Service; accessor results are independent value copies.
 type Policy struct{ config PolicyConfig }
 
-// NewPolicy validates and copies a complete policy configuration.
+// NewPolicy validates and copies a complete policy configuration without filling
+// defaults. Every algorithm ceiling is required because verification is cross-
+// algorithm. BcryptCost limits must be 4 through 31; selected target parameters
+// must fit the limits, and Argon2id output must fit EncodedHashBytes. Unused
+// algorithm target fields are not validated as a second generation target.
 func NewPolicy(c PolicyConfig) (Policy, error) {
 	if c.Limits.PasswordBytes < 1 || c.Limits.EncodedHashBytes < 60 || c.Limits.Argon2Time < 1 || c.Limits.MemoryKiB < 8 || c.Limits.Parallelism < 1 || c.Limits.SaltBytes < 8 || c.Limits.OutputBytes < 16 || c.Limits.BcryptCost < 4 || c.Limits.BcryptCost > 31 || c.Limits.Concurrent < 1 || c.Limits.Queue < 0 {
 		return Policy{}, newError(ErrInvalidPolicy, "configure limits", nil)
@@ -100,6 +107,9 @@ func rawBase64EncodedLength(bytes uint32) uint64 { return (uint64(bytes)*8 + 5) 
 
 // DefaultPolicy returns the package's default Argon2id policy: version 19,
 // time 2, 64 MiB memory, one lane, 16-byte salt, and 32-byte output.
+// Verification ceilings are time 4, 128 MiB, four lanes, 64-byte salts/outputs,
+// bcrypt cost 14, 1024-byte passwords, and 512-byte encodings. Admission allows
+// four active operations and sixteen waiters; deployments still own sizing.
 func DefaultPolicy() Policy {
 	return Policy{config: PolicyConfig{Algorithm: Argon2id, Argon2id: Argon2idParameters{Version: 19, Time: 2, MemoryKiB: 64 * 1024, Parallelism: 1, SaltLength: 16, OutputLength: 32}, Limits: Limits{PasswordBytes: 1024, EncodedHashBytes: 512, Argon2Time: 4, MemoryKiB: 128 * 1024, Parallelism: 4, SaltBytes: 64, OutputBytes: 64, BcryptCost: 14, Concurrent: 4, Queue: 16}}}
 }

@@ -1,5 +1,8 @@
 //go:build ignore
 
+// Package main produces temporary synthetic encodings for PHP verification.
+// Argon2id uses a fixed public test salt; bcrypt generates fresh random salt.
+// Output is test persistence data, not a tracked Go-source generation input.
 package main
 
 import (

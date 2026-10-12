@@ -35,8 +35,9 @@ Fixtures live in `passwordtest`; they contain no production credentials.
 3. Reject mismatch; classify malformed/resource failures as stored-data or
    operational failures rather than bad credentials when the user exists.
 4. If no rehash is needed, authenticate normally.
-5. If a replacement is returned, conditionally update only while the old hash
-   is still present.
+5. If the successful result needs rehashing, conditionally store the replacement
+   only while the old hash is still present. A match needing no upgrade returns
+   the original hash; do not treat that nonempty value as a replacement.
 6. Authenticate after a successful match even if the optional CAS loses to a
    concurrent login. Re-read later if the application needs confirmation.
 

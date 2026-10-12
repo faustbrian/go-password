@@ -14,14 +14,18 @@ const (
 	LaravelArgon2id = "$argon2id$v=19$m=65536,t=2,p=1$SBj4Q9N+Krb5qUX9O00GHg$r0xVBSfxyYkNbAcWCI8kZHSz5Z3U/vV9bx8o7aYjxbc"
 )
 
-// Entropy is a concurrency-safe repeating deterministic reader for tests.
+// Entropy is a concurrency-safe repeating deterministic reader for tests, not
+// cryptographic entropy. Use NewEntropy; the zero value cannot fill a buffer.
+// Concurrent reads serialize, but scheduling decides which reader gets each
+// portion of the stream. No memory-erasure guarantee applies to the stored seed.
 type Entropy struct {
 	mu     sync.Mutex
 	seed   []byte
 	offset int
 }
 
-// NewEntropy copies a non-empty deterministic seed.
+// NewEntropy copies a non-empty deterministic seed; later caller mutations do
+// not change the stream. Seeds must be non-secret test data.
 func NewEntropy(seed []byte) (*Entropy, error) {
 	if len(seed) == 0 {
 		return nil, errors.New("passwordtest: entropy seed is empty")
@@ -29,7 +33,9 @@ func NewEntropy(seed []byte) (*Entropy, error) {
 	return &Entropy{seed: append([]byte(nil), seed...)}, nil
 }
 
-// Read fills destination by repeating the seed.
+// Read fills destination by repeating the seed and advancing the shared offset.
+// For a constructed reader it returns len(destination), nil, including zero for
+// an empty destination. It is intended for bounded test workloads.
 func (e *Entropy) Read(destination []byte) (int, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()

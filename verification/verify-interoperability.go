@@ -1,5 +1,8 @@
 //go:build ignore
 
+// Package main verifies the two temporary PHP-produced synthetic encodings.
+// This build-ignored interoperability command reads caller-selected test data
+// and emits no encoded values in failure diagnostics.
 package main
 
 import (

@@ -28,8 +28,9 @@ var (
 	ErrClosed = errors.New("password: admission closed")
 )
 
-// Error is a classified, secret-safe password operation error. Error omits
-// Cause text; callers can inspect Kind and Cause through errors.Is/errors.As.
+// Error is a classified password operation error. Error and fmt formatting omit
+// cause details; Cause and Unwrap intentionally expose the raw underlying error
+// for trusted inspection, not automatic logging or arbitrary serialization.
 type Error struct {
 	kind      error
 	operation string
@@ -47,7 +48,8 @@ func (e *Error) Kind() error { return e.kind }
 func (e *Error) Operation() string { return e.operation }
 
 // Cause returns the underlying cancellation, entropy, or primitive error.
-// Its text is never included in Error.
+// Its text is never included in Error formatting, but logging the returned cause
+// directly can disclose sensitive operational data.
 func (e *Error) Cause() error { return e.cause }
 
 // Error returns a stable classification without formatting Cause.

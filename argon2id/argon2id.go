@@ -2,7 +2,9 @@ package argon2id
 
 import password "github.com/faustbrian/go-password/v2"
 
-// New validates parameters and limits and constructs an Argon2id service.
+// New validates parameters and all verification limits, then constructs an
+// Argon2id-target service. The service can also verify bounded bcrypt hashes;
+// this constructor is not an algorithm allowlist.
 func New(parameters password.Argon2idParameters, limits password.Limits, options ...password.Option) (*password.Service, error) {
 	policy, err := password.NewPolicy(password.PolicyConfig{Algorithm: password.Argon2id, Argon2id: parameters, Limits: limits})
 	if err != nil {

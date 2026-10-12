@@ -1,5 +1,8 @@
 //go:build ignore
 
+// Package main checks public declaration comments in hand-maintained source.
+// This build-ignored command is invoked by the native api-docs target; it does
+// not generate API snapshots or inspect password values.
 package main
 
 import (

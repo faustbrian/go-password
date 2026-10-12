@@ -17,7 +17,8 @@ import (
 
 const bcryptMaximumPasswordBytes = 72
 
-// Result carries match and upgrade state without derived material.
+// Result carries match and upgrade state without derived material. Its zero
+// value reports neither a match nor an upgrade.
 type Result struct {
 	match  bool
 	rehash bool
@@ -31,6 +32,9 @@ func (r Result) NeedsRehash() bool { return r.rehash }
 
 // Service performs policy-bound hashing, verification, and upgrades. It is
 // safe for concurrent use when configured collaborators are concurrency-safe.
+// Use New; a nil Service or its zero value is not usable. Contexts must be non-nil.
+// Callers keep password slices stable until return, including queued time; the
+// private copy is taken after admission and cleared on return, not at entry.
 type Service struct {
 	policy    Policy
 	entropy   io.Reader
@@ -38,11 +42,14 @@ type Service struct {
 	observer  Observer
 }
 
-// Option configures optional admission and observation collaborators.
+// Option configures optional admission and observation collaborators. New runs
+// options synchronously in order and returns their errors without translation.
+// Custom options are trusted constructor code; their panics are not recovered.
 type Option func(*Service) error
 
 // WithAdmission replaces the policy-derived admission controller. The caller
-// owns its lifecycle and may share it across services.
+// owns its lifecycle and may share it across services. This controller replaces,
+// rather than supplements, the policy-derived concurrency and queue limits.
 func WithAdmission(admission *Admission) Option {
 	return func(s *Service) error {
 		if admission == nil {
@@ -53,7 +60,10 @@ func WithAdmission(admission *Admission) Option {
 	}
 }
 
-// New constructs a production service using crypto/rand.Reader for salts.
+// New constructs a production service using crypto/rand.Reader for Argon2id
+// salts; bcrypt obtains entropy through its maintained primitive. Policy must
+// come from NewPolicy or DefaultPolicy. Nil options are rejected. Collaborators
+// are borrowed, not cloned or closed, and no Service background worker is started.
 func New(policy Policy, options ...Option) (*Service, error) {
 	return newService(policy, rand.Reader, options...)
 }
@@ -89,8 +99,10 @@ func isNilInterface(value any) bool {
 	return false
 }
 
-// Hash copies the password, obtains admission and entropy, and returns a new
-// encoded hash. Cancellation cannot interrupt a primitive already executing.
+// Hash validates password length, obtains admission, copies the password, and
+// returns a new encoded hash. Bcrypt also imposes its 72-byte password ceiling.
+// Cancellation cannot interrupt a salt read or a primitive already executing;
+// there is no cancellation recheck after admission or before returning a hash.
 func (s *Service) Hash(ctx context.Context, password []byte) (EncodedHash, error) {
 	started := time.Now()
 	hash, err := s.hash(ctx, password)
@@ -132,7 +144,10 @@ func (s *Service) hash(ctx context.Context, password []byte) (EncodedHash, error
 }
 
 // Verify parses and bounds encoded before admission and primitive execution.
-// Cancellation cannot interrupt a primitive already executing.
+// It accepts either supported algorithm under the policy limits, independently
+// of the generation target. Wrong passwords return ErrMismatch and a zero Result.
+// Cancellation cannot interrupt an admitted primitive, and completion is not
+// followed by a cancellation recheck.
 func (s *Service) Verify(ctx context.Context, password []byte, encoded string) (Result, error) {
 	started := time.Now()
 	result, err := s.verify(ctx, password, encoded)
@@ -188,8 +203,11 @@ func classifyAcquire(operation string, err error) error {
 	return err
 }
 
-// NeedsRehash recommends only monotonic upgrades and never Argon2id-to-bcrypt
-// or stronger-parameter downgrades.
+// NeedsRehash compares metadata, not password possession. It never recommends
+// Argon2id-to-bcrypt or a lower bcrypt cost. For Argon2id, any higher stored time,
+// memory, salt length, or output length suppresses replacement; otherwise lower
+// ordered dimensions or any parallelism difference recommend the target. Lane
+// count may increase or decrease: it is deployment shape, not ordered strength.
 func (s *Service) NeedsRehash(hash EncodedHash) bool {
 	if hash.algorithm != s.policy.config.Algorithm {
 		return s.policy.config.Algorithm == Argon2id && hash.algorithm == Bcrypt
@@ -212,8 +230,11 @@ func (s *Service) NeedsRehash(hash EncodedHash) bool {
 func (s *Service) Policy() Policy { return s.policy }
 
 // VerifyAndUpgrade verifies before hashing and leaves durable replacement to
-// the caller. On upgrade failure, the successful Result is returned with an
-// empty replacement so the existing hash remains usable.
+// the caller. A match needing no upgrade returns the parsed original hash.
+// Verification and replacement hashing acquire admission separately; cancellation
+// or rejection can occur between them. On upgrade failure, the successful Result
+// is returned with an empty hash and the error. A new hash alone is not a durable
+// upgrade: the application must compare-and-swap against the verified encoding.
 func (s *Service) VerifyAndUpgrade(ctx context.Context, password []byte, encoded string) (Result, EncodedHash, error) {
 	started := time.Now()
 	result, upgraded, err := s.verifyAndUpgrade(ctx, password, encoded)

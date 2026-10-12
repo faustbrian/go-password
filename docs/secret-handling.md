@@ -1,8 +1,9 @@
 # Secret handling and side channels
 
 Password byte slices remain caller-owned. Operations copy them before primitive
-use, never retain them, and best-effort `clear` only the internal copy. Go may
-copy memory, keep stack/register values, or optimize lifetimes; this package
+use, **after admission**, never retain them, and best-effort `clear` only the
+internal copy. Keep the caller buffer stable until return, including queue time.
+Go may copy memory, keep stack/register values, or optimize lifetimes; this package
 does not claim guaranteed erasure.
 
 Never convert passwords to strings for convenience, place them in contexts, or
