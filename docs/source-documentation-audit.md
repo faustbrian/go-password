@@ -179,3 +179,12 @@ changed lines remain the applicable secret-check boundaries.
 | `verification/check-api-docs.go` | hand-maintained standalone ignored command; producer/checker boundary |
 | `verification/generate-interoperability.go` | hand-maintained standalone ignored command; producer/checker boundary |
 | `verification/verify-interoperability.go` | hand-maintained standalone ignored command; producer/checker boundary |
+
+## Objective Enforcement
+
+The checksum-pinned public Tools v2.4.0 verifier now supplies
+`make source-docs-check` as a prerequisite of the existing local and CI Make
+routes. Ordinary shared CI selects strict source-documentation checking and
+requires its result. Native prerequisites, operation budgets, security and
+release controls are retained. Hosted exact-head evidence is recorded by the
+coordination ledger; configuration alone does not establish green delivery.

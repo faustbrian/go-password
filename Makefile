@@ -1,11 +1,11 @@
 GOLIB ?= golib
 
-.PHONY: check check-full ci cohesion inventory repository-check specification-check specification-check-online workflows boundaries conformance-local
+.PHONY: source-docs-check check check-full ci cohesion inventory repository-check specification-check specification-check-online workflows boundaries conformance-local
 
-check: boundaries conformance-local
+check: source-docs-check boundaries conformance-local
 	$(GOLIB) check --local --all
 
-check-full: specification-check-online
+check-full: source-docs-check specification-check-online
 	$(GOLIB) check --all
 
 boundaries:
@@ -14,7 +14,7 @@ boundaries:
 conformance-local:
 	bash verification/check-conformance.sh --local
 
-ci: repository-check cohesion specification-check workflows check
+ci: source-docs-check repository-check cohesion specification-check workflows check
 
 cohesion:
 	$(GOLIB) cohesion check
@@ -30,3 +30,6 @@ specification-check-online:
 
 workflows:
 	$(GOLIB) workflows check
+
+source-docs-check:
+	$(GOLIB) source-docs check
