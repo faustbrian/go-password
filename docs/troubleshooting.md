@@ -1,5 +1,7 @@
 # Troubleshooting
 
+[Documentation index](README.md)
+
 ## `ErrMalformedHash`
 
 Check exact prefix, separator count, fixed Argon parameter order, canonical
@@ -44,3 +46,5 @@ and add headroom. Lower admission concurrency before weakening the hash policy.
 
 A concurrent writer changed the hash. Do not overwrite it. Treat the login as a
 successful verification and let a later login re-evaluate the current value.
+
+Continue with [API and error semantics](api.md).

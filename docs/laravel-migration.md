@@ -1,5 +1,7 @@
 # Laravel password migration
 
+[Documentation index](README.md)
+
 The migration is login-time, verification-first, and identity-neutral. Keep
 Laravel as the source of user identity and storage ownership.
 
@@ -58,3 +60,5 @@ persistence with the application.
 Never clear or overwrite the existing hash before successful verification and
 durable conditional update. Do not change the user identifier, session policy,
 or authentication principal because the hash algorithm changed.
+
+Continue with [API and error semantics](api.md).

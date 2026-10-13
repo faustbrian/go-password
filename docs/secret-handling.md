@@ -1,5 +1,7 @@
 # Secret handling and side channels
 
+[Documentation index](README.md)
+
 Password byte slices remain caller-owned. Operations copy them before primitive
 use, **after admission**, never retain them, and best-effort `clear` only the
 internal copy. Keep the caller buffer stable until return, including queue time.
@@ -34,3 +36,5 @@ subject, error cause, and attacker-controlled parameters. Authentication
 records and configuration implement redacted `fmt` and `log/slog` formatting;
 classified errors redact their internal causes for every `fmt` verb. Keep metric
 labels to the provided bounded enums.
+
+Continue with [API and error semantics](api.md).

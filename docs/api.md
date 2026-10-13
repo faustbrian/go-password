@@ -1,5 +1,7 @@
 # API and error semantics
 
+[Documentation index](README.md)
+
 ## Policy
 
 `NewPolicy` validates a complete immutable `PolicyConfig`. A policy contains a

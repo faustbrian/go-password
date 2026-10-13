@@ -1,5 +1,7 @@
 # Encoded-hash grammar
 
+[Documentation index](README.md)
+
 The parser consumes at most `Limits.EncodedHashBytes` and rejects hostile
 parameters before invoking a primitive.
 
@@ -40,3 +42,5 @@ cost is a resource rejection.
 The fuzz corpus covers truncation, extra separators, duplicate fields, numeric
 overflow, invalid base64, unsupported versions, trailing data, and parameter
 bombs. Successful parsing round-trips exactly through `EncodedHash.String()`.
+
+Continue with [API and error semantics](api.md).

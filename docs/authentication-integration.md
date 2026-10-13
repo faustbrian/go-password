@@ -1,5 +1,7 @@
 # Authentication integration
 
+[Documentation index](README.md)
+
 `adapters/authentication` bridges application lookup to password verification
 without a reverse dependency from `authentication` or ownership of users.
 
@@ -31,3 +33,5 @@ The released `passwordauth` import path remains as a deprecated delegating
 facade. New code should import
 `github.com/faustbrian/go-password/v2/adapters/authentication` after v2 is
 published.
+
+Continue with [API and error semantics](api.md).

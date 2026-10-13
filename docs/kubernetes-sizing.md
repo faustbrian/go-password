@@ -1,5 +1,7 @@
 # Kubernetes sizing
 
+[Documentation index](README.md)
+
 ## Measured baseline
 
 Recorded locally on 2026-07-16 with Go 1.26.5, darwin/arm64, Apple M4 Max,

@@ -1,5 +1,7 @@
 # Algorithm selection
 
+[Documentation index](README.md)
+
 Use Argon2id for all new hashes. The default is an explicit package profile,
 not a timeless recommendation. Re-benchmark periodically and when CPU, memory,
 Go, or `x/crypto` changes.
@@ -45,3 +47,5 @@ bounds, resource limits, fuzzing, and a documented removal/upgrade path.
 
 Pre-hashing is intentionally absent. Adding it would create a new versioned,
 incompatible password scheme and must never be transparent.
+
+Continue with [API and error semantics](api.md).

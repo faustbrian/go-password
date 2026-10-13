@@ -1,5 +1,7 @@
 # Password specification decisions
 
+[Documentation index](README.md)
+
 This register is the human-readable view of
 [`specification/decisions.json`](../specification/decisions.json). RFC 9106 is
 authoritative for Argon2, RFC 4648 is authoritative for base64 mechanics, and
@@ -252,3 +254,5 @@ changelog, conformance, and peer-evidence review.
 
 None. New ambiguity, erratum, source drift, parser policy, algorithm behavior,
 or migration rule must be registered before it changes observable behavior.
+
+Continue with [API and error semantics](api.md).

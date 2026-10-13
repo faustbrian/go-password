@@ -1,5 +1,7 @@
 # Security review packet
 
+[Documentation index](README.md)
+
 ## Internal audit status
 
 The repository contains executable coverage for the following boundaries.
@@ -104,3 +106,5 @@ not that reviewer's disposition and does not authorize publication.
 - No attacker-selected primitive work above limits.
 - No upgrade before match or unconditional stale overwrite.
 - No claim of guaranteed erasure, cancellation, or side-channel immunity.
+
+Continue with [API and error semantics](api.md).

@@ -1,5 +1,7 @@
 # Logging and telemetry
 
+[Documentation index](README.md)
+
 Use `password.WithObserver` to adapt events into standard `log/slog`,
 `log`, or `telemetry`. The package intentionally depends on none of them.
 
@@ -23,3 +25,5 @@ redacted or validated by the package.
 Observers run synchronously and must bound latency. A panic is isolated, but a
 blocking observer delays the password call. If an application needs asynchronous
 delivery, it owns a bounded queue, drop policy, shutdown, and secret review.
+
+Continue with [API and error semantics](api.md).

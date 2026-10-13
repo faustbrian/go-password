@@ -1,5 +1,7 @@
 # Compatibility matrix
 
+[Documentation index](README.md)
+
 Observable standards and profile choices are recorded in the
 [specification decision register](specification-decisions.md).
 

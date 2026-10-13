@@ -2,9 +2,8 @@
 
 [![CI](https://github.com/faustbrian/go-password/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-password/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-password/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-local%20%2F%20scheduled-blue)](CONTRIBUTING.md#verification)
-[![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
+[![Documentation](https://img.shields.io/badge/docs-structural_checks_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-password/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-password/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-password?sort=semver)](https://github.com/faustbrian/go-password/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
@@ -15,10 +14,8 @@ and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
 endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
 
-This source tree defines `github.com/faustbrian/go-password/v2` at v2.0.1
-and requires Go 1.27.0. Eligibility and a changelog date do not establish
-publication; adoption requires the public tag and module artifacts. The
-immutable legacy v1.1.0 module specifies Go 1.26.6.
+The public `github.com/faustbrian/go-password/v2` v2.0.1 release requires
+Go 1.27.0. The immutable legacy v1.1.0 module retains its Go 1.26.6 contract.
 
 ## Requirements
 
@@ -27,14 +24,14 @@ immutable legacy v1.1.0 module specifies Go 1.26.6.
 
 ## Install
 
-After the public v2.0.1 tag and module artifacts are available:
+Install the published v2.0.1 release:
 
 ```sh
 go get github.com/faustbrian/go-password/v2@v2.0.1
 ```
 
 Use the `/v2` imports shown below. Existing v2 applications can retain
-released v2.0.0 until the patch is published; legacy applications can retain
+released v2.0.0 while planning an upgrade; legacy applications can retain
 v1.1.0 without local replacements or pseudo-versions.
 
 ## Five-minute Argon2id quickstart
@@ -164,3 +161,5 @@ seed-versus-active fuzzing, optional local mutation and PHP/resource boundaries.
 ## License
 
 MIT
+
+Continue with the [documentation index](docs/README.md).

@@ -1,5 +1,7 @@
 # Vector and fixture provenance
 
+[Documentation index](README.md)
+
 All passwords in this corpus are synthetic literals. No fixture was copied from
 an application database, incident, user account, or production log.
 
@@ -50,3 +52,5 @@ encodings without trusting a single implementation or only stable fixtures.
 Any fixture change must retain the producer, version, exact synthetic input,
 parameters, generation command, and bidirectional verification. Randomly
 generated replacements must not erase the stable committed corpus.
+
+Continue with [API and error semantics](api.md).

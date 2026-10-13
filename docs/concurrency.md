@@ -1,5 +1,7 @@
 # Concurrency and lifecycle
 
+[Documentation index](README.md)
+
 Policies are immutable values. `Service` and `Admission` are safe for concurrent
 use. Test entropy is mutex-protected; custom observers must be concurrency-safe.
 
@@ -21,3 +23,5 @@ controller.
 
 Concurrent login upgrades must use database compare-and-swap. Admission protects
 process resources; it does not serialize database writers or replace a CAS.
+
+Continue with [API and error semantics](api.md).

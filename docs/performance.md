@@ -1,5 +1,7 @@
 # Performance baseline
 
+[Documentation index](README.md)
+
 The approved default and migration baseline was measured on 2026-07-16 with Go
 1.26.5 on Apple M4 Max (`darwin/arm64`). One benchmark iteration was used to
 avoid repeatedly consuming large Argon2 memory during smoke gates.

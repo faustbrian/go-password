@@ -1,5 +1,7 @@
 # Source documentation audit
 
+[Documentation index](README.md)
+
 ## Scope and reproduction
 
 Documentation-only audit of base `b0066c725edad1456c9279d259fc9305003d027f`.
@@ -188,3 +190,5 @@ routes. Ordinary shared CI selects strict source-documentation checking and
 requires its result. Native prerequisites, operation budgets, security and
 release controls are retained. Hosted exact-head evidence is recorded by the
 coordination ledger; configuration alone does not establish green delivery.
+
+Continue with [API and error semantics](api.md).

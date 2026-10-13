@@ -1,5 +1,7 @@
 # FAQ
 
+[Documentation index](README.md)
+
 ## Why Argon2id by default?
 
 It is the preferred maintained memory-hard primitive for new password hashes.
@@ -40,3 +42,5 @@ ordinary Argon2id/bcrypt hashes. The package currently rejects over-limit input.
 
 No. It supplies lookup/verification/CAS data that an application adapter can
 turn into a `authentication` principal.
+
+Continue with [API and error semantics](api.md).

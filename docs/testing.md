@@ -1,5 +1,7 @@
 # Testing and release gates
 
+[Documentation index](README.md)
+
 The root and optional packages maintain meaningful 100% production statement
 coverage. Coverage is a floor; vectors, boundary assertions, fuzzing, race
 tests, mutation checks, and integration fixtures prove behavior.

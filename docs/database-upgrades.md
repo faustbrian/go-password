@@ -1,5 +1,7 @@
 # Database upgrades and concurrency
 
+[Documentation index](README.md)
+
 `password` does not own an ORM or repository. Persist upgrades with an
 optimistic comparison against the exact encoded value that was verified.
 
@@ -46,3 +48,5 @@ A single conditional `UPDATE` is atomic and normally sufficient. A larger
 transaction may include audit metadata, but never hold a database transaction
 open while running Argon2id/bcrypt. Verify and hash outside the transaction,
 then perform the short CAS. The conditional predicate prevents stale overwrite.
+
+Continue with [API and error semantics](api.md).
