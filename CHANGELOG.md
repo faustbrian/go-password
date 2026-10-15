@@ -5,6 +5,14 @@ versioning after v1.
 
 ## Unreleased
 
+### Added
+
+- Add explicitly owned ephemeral `Secret` values with shared terminal
+  destruction, exclusive synchronous callback borrowing and redacted errors.
+  Existing hashing methods continue to borrow caller-supplied slices.
+- Add closed algorithm `Parameters` with intrinsic validation; `NewPolicy`
+  remains responsible for the caller's resource ceilings before hashing.
+
 ### Documentation
 
 - Clarify borrowed password lifetime, admission/cancellation boundaries,

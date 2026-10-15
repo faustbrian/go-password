@@ -12,7 +12,8 @@
 `password` is a narrowly scoped password hashing, verification, parsing,
 and login-time upgrade library. It uses maintained Go implementations of
 Argon2id and bcrypt. It does not own users, repositories, registration, login
-endpoints, sessions, password reset, MFA, authorization, or reversible secrets.
+endpoints, sessions, password reset, MFA, authorization, or reversible secret
+storage.
 
 The public `github.com/faustbrian/go-password/v2` v2.0.1 release requires
 Go 1.27.0. The immutable legacy v1.1.0 module retains its Go 1.26.6 contract.
@@ -21,6 +22,21 @@ Go 1.27.0. The immutable legacy v1.1.0 module retains its Go 1.26.6 contract.
 
 - Go 1.27.0 or newer.
 - `golang.org/x/crypto` v0.57.0.
+
+## Development API: explicit secret custody
+
+The unreleased `NewSecret` API copies 1..1,048,576 bytes into an ephemeral
+owner. Defer `Destroy`; value copies share terminal destruction. `Use` admits
+one synchronous callback at a time, lends an isolated mutable copy and clears
+that copy on every exit, including errors and panics. Callbacks must not retain
+or asynchronously access the borrow. No callback runs under the owner lock;
+`Destroy` does not wait for an active callback. Go cannot promise runtime-wide
+memory erasure. The existing hashing API and stored hash formats are unchanged.
+
+The unreleased `NewParameters` API validates one algorithm arm and intrinsic
+bounds without allocating hashing work. Compose the result with `NewPolicy`
+to enforce deployment resource ceilings; intrinsic validity alone does not
+admit hashing. These additions are not included in the v2.0.1 release below.
 
 ## Install
 
