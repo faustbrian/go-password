@@ -21,6 +21,12 @@ versioning after v1.
 - Document caller-owned shutdown/CAS and the limits of diagnostic redaction
   without changing algorithms, encoded formats, or runtime behavior.
 
+## 2.1.0 - 2026-10-22
+
+### Changed
+
+- Publish the current source and documentation with a fresh immutable tag.
+
 ## 2.0.1 - 2026-10-02
 
 ### Changed
